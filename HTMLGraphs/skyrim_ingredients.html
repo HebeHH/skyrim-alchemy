@@ -4662,7 +4662,7 @@
         network = new vis.Network(container, data, options);
 
         network.on("click", function name(params) {
-          neighbourhoodHighlight(params, 2);
+          neighbourhoodHighlight(params, 5);
         });
 
         return network;
@@ -4816,7 +4816,7 @@
           // curr_highlighted_node = network.getSelection().nodes[0]
           console.log("Highlight is active, redoing highlight for selected node")
           console.log(network.getSelection().nodes)
-          neighbourhoodHighlight(network.getSelection())
+          neighbourhoodHighlight(network.getSelection(), 5)
         }
       }
 

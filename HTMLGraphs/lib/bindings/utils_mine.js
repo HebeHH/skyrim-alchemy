@@ -1,6 +1,6 @@
  
 
-function neighbourhoodHighlight(params, degrees = 2) {
+function neighbourhoodHighlight(params, degrees = 5) {
   allNodes = nodes.get({ returnType: "Object" });
   console.log("in neighborhood highlight")
   console.log('highlight active', highlightActive)
@@ -12,78 +12,90 @@ function neighbourhoodHighlight(params, degrees = 2) {
     var selectedNode = params.nodes[0];
     // mark all nodes as hard to read.
     for (let nodeId in allNodes) {
-      // nodeColors[nodeId] = allNodes[nodeId].color;
       allNodes[nodeId].color = "rgba(120,180,180,0.3)";
     }
-    var connectedNodes = network.getConnectedNodes(selectedNode);
+    // reset all edges to inherit color
+    curr_edges = edges.get({ returnType: "object" });
+    curr_edges.forEach(e => e.color = {inherit: true})
+    edges.update(curr_edges)
+
+
+    // set the color madding for nodes and edges at each degree
+    default_color_neighbourHighlight = {
+      nodeColor: nodeId => "pink",
+      edgeColor: {inherit: true}
+    }
+    color_mapping_neighbourHighlight = [
+      {
+        nodeColor: nodeId => nodeColors[nodeId],
+        edgeColor: {inherit: true}
+      },
+      {
+        nodeColor: nodeId => nodeColors[nodeId],
+        edgeColor: {color: 'green'}
+      },
+      {
+        nodeColor: nodeId => ({
+          background: nodeColors[nodeId].background  + "dd",
+          border: nodeColors[nodeId].border  + "dd",
+        }),
+        edgeColor: {color: 'yellow'}
+      },
+      {
+        nodeColor: nodeId => ({
+          background: nodeColors[nodeId].background  + "aa",
+          border: "#bb0066aa",
+        }),
+        edgeColor: {color: 'orange'}
+      },
+      {
+        nodeColor: nodeId => ({
+          background: nodeColors[nodeId].background  + "66",
+          border: "#bb880066",
+        }),
+        edgeColor: {color: 'red'}
+      },
+    ]
+    function getColorAtDegree(degree) {
+      return degree < color_mapping_neighbourHighlight.length ? color_mapping_neighbourHighlight[degree] : default_color_neighbourHighlight;
+    }
+
+
     
-    // get nodes at N degrees
-    var second_degree_nodes = [];
-    // get the second degree nodes
-      for (j = 0; j < connectedNodes.length; j++) {
-        second_degree_nodes = second_degree_nodes.concat(
-          network.getConnectedNodes(connectedNodes[j])
-        );
-      }
-      var third_degree_nodes = [];
-    // get the third degree nodes
-      for (j = 0; j < second_degree_nodes.length; j++) {
-        third_degree_nodes = third_degree_nodes.concat(
-          network.getConnectedNodes(second_degree_nodes[j])
-        );
-      }
-      var fourth_degree_nodes = [];
-    // get the third degree nodes
-      for (j = 0; j < third_degree_nodes.length; j++) {
-        fourth_degree_nodes = fourth_degree_nodes.concat(
-          network.getConnectedNodes(third_degree_nodes[j])
-        );
-      }
+    var allConnectedNodes = [selectedNode] // keeps track of whether node already in a higher degree
+    var connectedNodesByDegrees = [[selectedNode]]
 
+    // Get all connected nodes for each degree, without duplicates
+    for (i = 0; i < degrees; i++) {
+      // get all connected nodes at this degree
+      connectedNodesAtDegree = connectedNodesByDegrees[i].map(nid => network.getConnectedNodes(nid));
+      // flatten and remove duplicates
+      connectedNodesAtDegree = [...new Set(connectedNodesAtDegree.flat())];
+      connectedNodesAtDegree = connectedNodesAtDegree.filter(nid => !allConnectedNodes.includes(nid));
 
+      // add to accumulators
+      allConnectedNodes = allConnectedNodes.concat(connectedNodesAtDegree)
+      connectedNodesByDegrees = connectedNodesByDegrees.concat([connectedNodesAtDegree])
+    }
 
+    // Go through each degree and highlight the relevant appropriately
+    for (i = degrees - 1; i >= 0; i-- ) {
+      edge_color_at_id = getColorAtDegree(i).edgeColor
+      connectedNodesByDegrees[i].forEach(nodeId => {
+        allNodes[nodeId].color = getColorAtDegree(i).nodeColor(nodeId);
+        network.getConnectedEdges(nodeId).forEach(e => edges.update({id:e,color: edge_color_at_id}));
+      })
+    }
     
-    // all fourth degree nodes get a different color and their label back
-    for (i = 0; i < fourth_degree_nodes.length; i++) {
-      new_color = {
-        background: nodeColors[fourth_degree_nodes[i]].background  + "66",
-        // border: nodeColors[fourth_degree_nodes[i]].border  + "66",
-        border: "#bb880066",
-      }
-      allNodes[fourth_degree_nodes[i]].color = new_color;
-    }
-    // all third degree nodes get a different color and their label back
-    for (i = 0; i < third_degree_nodes.length; i++) {
-      new_color = {
-        background: nodeColors[third_degree_nodes[i]].background  + "aa",
-        // border: nodeColors[third_degree_nodes[i]].border  + "aa",
-        border: "#bb0066aa",
-      }
-      allNodes[third_degree_nodes[i]].color = new_color;
-    }
-    // all second degree nodes get a different color and their label back
-    for (i = 0; i < second_degree_nodes.length; i++) {
-      new_color = {
-        background: nodeColors[second_degree_nodes[i]].background  + "dd",
-        border: nodeColors[second_degree_nodes[i]].border  + "dd",
-      }
-      allNodes[second_degree_nodes[i]].color = new_color;
-    }
-    // all first degree nodes get their own color and their label back
-    for (i = 0; i < connectedNodes.length; i++) {
-      // allNodes[connectedNodes[i]].color = undefined;
-      console.log(nodeColors[connectedNodes[i]])
-      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
-    }
-
-    // the main node gets its own color and its label back.
-    // allNodes[selectedNode].color = undefined;
-    allNodes[selectedNode].color = nodeColors[selectedNode];
-  } else if (highlightActive === true) {
+  } 
+  
+  
+  else if (highlightActive === true) {
     console.log("resetting nodes")
     // reset all nodes
     for (let nodeId in allNodes) {
       allNodes[nodeId].color = nodeColors[nodeId];
+      network.getConnectedEdges(nodeId).forEach(e => edges.update({id:e,color:{inherit: true}}))
     }
     highlightActive = false;
   }

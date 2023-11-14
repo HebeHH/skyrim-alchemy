@@ -2,8 +2,7 @@
 
 function neighbourhoodHighlight(params, degrees = 5) {
   allNodes = nodes.get({ returnType: "Object" });
-  console.log("in neighborhood highlight")
-  console.log('highlight active', highlightActive)
+  console.log("in neighborhood highlight, highlight active: ", highlightActive, ", degrees: ", degrees)
   
   // if something is selected:
   if (params.nodes.length > 0) {
@@ -22,13 +21,16 @@ function neighbourhoodHighlight(params, degrees = 5) {
 
     // set the color madding for nodes and edges at each degree
     default_color_neighbourHighlight = {
-      nodeColor: nodeId => "pink",
+      nodeColor: nodeId => ({
+        background: nodeColors[nodeId].background  + "66",
+        border: "#6c757ddd",
+      }),
       edgeColor: {inherit: true}
     }
     color_mapping_neighbourHighlight = [
       {
         nodeColor: nodeId => nodeColors[nodeId],
-        edgeColor: {inherit: true}
+        edgeColor: {highlight: 'cyan'}
       },
       {
         nodeColor: nodeId => nodeColors[nodeId],
@@ -44,16 +46,23 @@ function neighbourhoodHighlight(params, degrees = 5) {
       {
         nodeColor: nodeId => ({
           background: nodeColors[nodeId].background  + "aa",
-          border: "#bb0066aa",
+          border: "#bb8800aa",
         }),
         edgeColor: {color: 'orange'}
       },
       {
         nodeColor: nodeId => ({
-          background: nodeColors[nodeId].background  + "66",
-          border: "#bb880066",
+          background: nodeColors[nodeId].background  + "aa",
+          border: "#bb8800aa",
         }),
-        edgeColor: {color: 'red'}
+        edgeColor: {color: 'maroon'}
+      },
+      {
+        nodeColor: nodeId => ({
+          background: nodeColors[nodeId].background  + "88",
+          border: "#6c757ddd",
+        }),
+        edgeColor: {inherit: true}
       },
     ]
     function getColorAtDegree(degree) {
@@ -64,28 +73,35 @@ function neighbourhoodHighlight(params, degrees = 5) {
     
     var allConnectedNodes = [selectedNode] // keeps track of whether node already in a higher degree
     var connectedNodesByDegrees = [[selectedNode]]
+    var allConnectedEdges = [] // keeps track of whether node already in a higher degree
 
     // Get all connected nodes for each degree, without duplicates
-    for (i = 0; i < degrees; i++) {
-      // get all connected nodes at this degree
-      connectedNodesAtDegree = connectedNodesByDegrees[i].map(nid => network.getConnectedNodes(nid));
-      // flatten and remove duplicates
-      connectedNodesAtDegree = [...new Set(connectedNodesAtDegree.flat())];
-      connectedNodesAtDegree = connectedNodesAtDegree.filter(nid => !allConnectedNodes.includes(nid));
+    for (i = 0; i < degrees + 1; i++) {
 
-      // add to accumulators
-      allConnectedNodes = allConnectedNodes.concat(connectedNodesAtDegree)
-      connectedNodesByDegrees = connectedNodesByDegrees.concat([connectedNodesAtDegree])
-    }
-
-    // Go through each degree and highlight the relevant appropriately
-    for (i = degrees - 1; i >= 0; i-- ) {
-      edge_color_at_id = getColorAtDegree(i).edgeColor
+      // Set color for nodes at degree
       connectedNodesByDegrees[i].forEach(nodeId => {
         allNodes[nodeId].color = getColorAtDegree(i).nodeColor(nodeId);
-        network.getConnectedEdges(nodeId).forEach(e => edges.update({id:e,color: edge_color_at_id}));
       })
+      // get all connected edges at this degree
+      connectedEdgesAtDegree = connectedNodesByDegrees[i].map(nid => network.getConnectedEdges(nid));
+      // flatten and remove duplicates
+      connectedEdgesAtDegree = [...new Set(connectedEdgesAtDegree.flat())].filter(nid => !allConnectedEdges.includes(nid));
+      allConnectedEdges = allConnectedEdges.concat(connectedEdgesAtDegree)
+      // update color for edges at this degree
+      edges.update(connectedEdgesAtDegree.map(e => ({id:e,color: getColorAtDegree(i).edgeColor})));
+      
+      // get new nodes to update if necessary
+      if (i < degrees) {
+        // get all connected nodes and edges at this degree
+        connectedNodesAtDegree = connectedNodesByDegrees[i].map(nid => network.getConnectedNodes(nid));
+        // flatten and remove duplicates
+        connectedNodesAtDegree = [...new Set(connectedNodesAtDegree.flat())].filter(nid => !allConnectedNodes.includes(nid));
+        // add to accumulators
+        allConnectedNodes = allConnectedNodes.concat(connectedNodesAtDegree)
+        connectedNodesByDegrees = connectedNodesByDegrees.concat([connectedNodesAtDegree])
+      }
     }
+
     
   } 
   

@@ -1,0 +1,277 @@
+{
+    "Fortify Lockpicking": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 25
+    },
+    "Fortify One-handed": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 112
+    },
+    "Resist Shock": {
+        "type": "help",
+        "attribute": "defense",
+        "value": 80
+    },
+    "Damage Stamina Regen": {
+        "type": "hurt",
+        "attribute": "stamina",
+        "value": 153
+    },
+    "Fortify Smithing": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 79
+    },
+    "Fortify Conjuration": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 72
+    },
+    "Fortify Health": {
+        "type": "help",
+        "attribute": "health",
+        "value": 79
+    },
+    "Ravage Health": {
+        "type": "hurt",
+        "attribute": "health",
+        "value": 6
+    },
+    "Damage Health": {
+        "type": "hurt",
+        "attribute": "health",
+        "value": 5
+    },
+    "Fortify Sneak": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 112
+    },
+    "Regenerate Health": {
+        "type": "help",
+        "attribute": "health",
+        "value": 171
+    },
+    "Weakness to Poison": {
+        "type": "hurt",
+        "attribute": "health",
+        "value": 51
+    },
+    "Resist Fire": {
+        "type": "help",
+        "attribute": "defense",
+        "value": 80
+    },
+    "Damage Magicka": {
+        "type": "hurt",
+        "attribute": "magicka",
+        "value": 49
+    },
+    "Damage Stamina": {
+        "type": "hurt",
+        "attribute": "stamina",
+        "value": 40
+    },
+    "Weakness to Shock": {
+        "type": "hurt",
+        "attribute": "defense",
+        "value": 52
+    },
+    "Lingering Damage Stamina": {
+        "type": "hurt",
+        "attribute": "stamina",
+        "value": 12
+    },
+    "Frenzy": {
+        "type": "hurt",
+        "attribute": "defense",
+        "value": 107
+    },
+    "Fortify Stamina": {
+        "type": "help",
+        "attribute": "stamina",
+        "value": 67
+    },
+    "Fortify Light Armor": {
+        "type": "help",
+        "attribute": "defense",
+        "value": 55
+    },
+    "Fortify Carry Weight": {
+        "type": "help",
+        "attribute": "stamina",
+        "value": 198
+    },
+    "Slow": {
+        "type": "hurt",
+        "attribute": "defense",
+        "value": 238
+    },
+    "Fortify Alteration": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 45
+    },
+    "Lingering Damage Health": {
+        "type": "hurt",
+        "attribute": "health",
+        "value": 86
+    },
+    "Fear": {
+        "type": "hurt",
+        "attribute": "defense",
+        "value": 200
+    },
+    "Cure Disease": {
+        "type": "help",
+        "attribute": "health",
+        "value": 7
+    },
+    "Restore Stamina": {
+        "type": "help",
+        "attribute": "stamina",
+        "value": 24
+    },
+    "Fortify Destruction": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 112
+    },
+    "Fortify Pickpocket": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 112
+    },
+    "Resist Magic": {
+        "type": "help",
+        "attribute": "defense",
+        "value": 51
+    },
+    "Waterbreathing": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 96
+    },
+    "Invisibility": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 249
+    },
+    "Fortify Illusion": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 90
+    },
+    "Regenerate Stamina": {
+        "type": "help",
+        "attribute": "stamina",
+        "value": 171
+    },
+    "Paralysis": {
+        "type": "hurt",
+        "attribute": "defense",
+        "value": 285
+    },
+    "Damage Magicka Regen": {
+        "type": "hurt",
+        "attribute": "magicka",
+        "value": 253
+    },
+    "Restore Magicka": {
+        "type": "help",
+        "attribute": "magicka",
+        "value": 24
+    },
+    "Restore Health": {
+        "type": "help",
+        "attribute": "health",
+        "value": 20
+    },
+    "Weakness to Frost": {
+        "type": "hurt",
+        "attribute": "defense",
+        "value": 37
+    },
+    "Ravage Magicka": {
+        "type": "hurt",
+        "attribute": "magicka",
+        "value": 15
+    },
+    "Weakness to Fire": {
+        "type": "hurt",
+        "attribute": "defense",
+        "value": 45
+    },
+    "Lingering Damage Magicka": {
+        "type": "hurt",
+        "attribute": "magicka",
+        "value": 71
+    },
+    "Fortify Heavy Armor": {
+        "type": "help",
+        "attribute": "defense",
+        "value": 55
+    },
+    "Fortify Two-handed": {
+        "type": "help",
+        "attribute": "defense",
+        "value": 112
+    },
+    "Fortify Magicka": {
+        "type": "help",
+        "attribute": "magicka",
+        "value": 68
+    },
+    "Resist Poison": {
+        "type": "help",
+        "attribute": "health",
+        "value": 112
+    },
+    "Fortify Block": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 112
+    },
+    "Weakness to Magic": {
+        "type": "hurt",
+        "attribute": "magicka",
+        "value": 24
+    },
+    "Fortify Enchanting": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 14
+    },
+    "Resist Frost": {
+        "type": "help",
+        "attribute": "defense",
+        "value": 80
+    },
+    "Regenerate Magicka": {
+        "type": "help",
+        "attribute": "magicka",
+        "value": 171
+    },
+    "Fortify Restoration": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 112
+    },
+    "Fortify Barter": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 48
+    },
+    "Ravage Stamina": {
+        "type": "hurt",
+        "attribute": "stamina",
+        "value": 52
+    },
+    "Fortify Marksman": {
+        "type": "help",
+        "attribute": "skill",
+        "value": 112
+    }
+}

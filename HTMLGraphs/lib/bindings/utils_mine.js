@@ -5,7 +5,7 @@ function findPathsBetweenNodes(node_a, node_b, curr_edges = false, max_path_leng
 
   function check_next_step(path, curr_node, prev_node) {
       if (path.length > max_path_length) { return; }
-      if (curr_node == node_b) {
+      if (curr_node == node_b && prev_node != '') {
           workable_paths = workable_paths.concat([path]);
           return;
       }
@@ -26,15 +26,14 @@ function findPathsBetweenNodes(node_a, node_b, curr_edges = false, max_path_leng
 
 }
 
-function highlightPathBetweenNodes(node_a, node_b) {
+function highlightPathBetweenNodes(node_a, node_b, max_path_length = 5) {
   highlightActive = true;
 
   // get current graph
   curr_nodes = nodes.get({ returnType: "object" });
   curr_edges = edges.get({ returnType: "object" });
 
-  paths = findPathsBetweenNodes(node_a, node_b, curr_edges)
-  console.log(paths)
+  paths = findPathsBetweenNodes(node_a, node_b, curr_edges, max_path_length)
   highlight_paths = [...new Set(paths.flat())]
   highlight_edges = highlight_paths.map(he => he.id)
   highlight_nodes = [...new Set(highlight_paths.map(e => [e.from, e.to]).flat())]
@@ -48,6 +47,7 @@ function highlightPathBetweenNodes(node_a, node_b) {
   edges.update(curr_edges)
   
   // Change edge colors: ones in a path bright, all others hard to see
+  console.log(highlight_nodes)
   curr_nodes.forEach(n =>  n.color = ( highlight_nodes.includes(n.id) ? nodeColors[n.id] : "rgba(120,180,180,0.3)"))
   nodes.update(curr_nodes)
   

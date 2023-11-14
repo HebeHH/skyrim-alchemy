@@ -679,6 +679,7 @@
       </div>
       <div id="dropdown-container">
         <button id="clear-all-toggle" onclick="clearAllIngredients()">Clear All.</button>
+        <button id="add-all-toggle" onclick="addAllIngredients()">Add All Ingredients.</button>
         <button id="dropdown-toggle">Change ingredients inventory ></button>
         <div id="add_ingredients"></div>
       </div>
@@ -4705,6 +4706,9 @@
       // This handler will only ever show one ingredient
       // Eg: even if there's 7 wheats selected, only 1 wheat will be shown
       function handleIngredientExistsChange(event) {
+        console.log("hangling ingredient exists change")
+        console.log(event.target)
+        // console.log(tyepof event.target)
         // Get the current and previous values
         let currentValue = parseInt(event.target.value, 10);
         let previousValue = parseInt(
@@ -4714,14 +4718,14 @@
         event.target.setAttribute("data-prev-value", currentValue);
 
         // Value is zero
-        if (currentValue === 0) {
+        if (currentValue === 0 && previousValue != 0) {
           console.log("Decremented Input Name:", event.target.name);
           deleteNodeByID(event.target.name);
           deleteUnusableEffectNodes();
         }
 
         // Ingredient count went above 0
-        if (currentValue > 0) {
+        if (currentValue > 0 && currentValue != previousValue) {
           console.log("Incremented Input Name:", event.target.name);
 
           if (previousValue == 0) {
@@ -4831,6 +4835,22 @@
 
         // Remove highlight (or things will come back weird)
         neighbourhoodHighlight({nodes: []});
+      }
+
+      function addAllIngredients() {
+        // For each ingredient, reset the input and delete the node
+        Array.from(document.querySelectorAll('input[type="number"]')).forEach(
+          function(ingredient_count_selector) {
+            ingredient_count_selector.value = 1; 
+            // ingredient_count_selector.setAttribute("data-prev-value", 1);
+            // addIngredientBack(ingredient_count_selector.name);
+            handleIngredientExistsChange({target: ingredient_count_selector})
+          } 
+        )
+
+        // // Remove highlight (or things will come back weird)
+        // neighbourhoodHighlight({nodes: []});
+        
       }
     </script>
 

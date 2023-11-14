@@ -110,6 +110,13 @@
           <div class="col-10 pb-2">
             <select
               class="form-select"
+              onchange="selectNode([value]);"
+              id="selectNode"
+              placeholder="Select node..."
+            >
+            </select>
+            <!-- <select
+              class="form-select"
               aria-label="Default select example"
               onchange="selectNode([value]);"
               id="select-node"
@@ -664,7 +671,7 @@
               <option value="Effect: Fortify Marksman">
                 Effect: Fortify Marksman
               </option>
-            </select>
+            </select> -->
           </div>
           <div class="col-2 pb-2">
             <button
@@ -678,7 +685,7 @@
         </div>
       </div>
       <div id="dropdown-container">
-        <label for="numdegrees">Number of degrees to highlight:</label><input type="number" id="numdegrees" value="5" name="numdegrees" min="0" max="6" onchange="changeHighlightDegrees(event)" />
+        <label for="numdegrees">Number of degrees to highlight:</label><input type="number" id="numdegrees" value="3" name="numdegrees" min="0" max="6" onchange="changeHighlightDegrees(event)" />
         <button id="clear-all-toggle" onclick="clearAllIngredients()">Clear All.</button>
         <button id="add-all-toggle" onclick="addAllIngredients()">Add All Ingredients.</button>
         <button id="dropdown-toggle">Change ingredients inventory ></button>
@@ -4563,13 +4570,13 @@
         },
       ];
 
-      new TomSelect("#select-node", {
-        create: false,
-        sortField: {
-          field: "text",
-          direction: "asc",
-        },
-      });
+      // new TomSelect("#select-node", {
+      //   create: false,
+      //   sortField: {
+      //     field: "text",
+      //     direction: "asc",
+      //   },
+      // });
 
       // This method is responsible for drawing the graph, returns the drawn network
       function drawGraph() {
@@ -4622,6 +4629,7 @@
             dragNodes: true,
             hideEdgesOnDrag: false,
             hideNodesOnDrag: false,
+            multiselect: true,
           },
           physics: {
             enabled: true,
@@ -4663,9 +4671,8 @@
 
         network = new vis.Network(container, data, options);
 
-        network.on("click", function name(params) {
-          neighbourhoodHighlight(params, degrees);
-        });
+        network.on("click", (params) => handleClickOnNode(params));
+
 
         return network;
       }
@@ -4703,7 +4710,42 @@
 
           // Append the container to the div
           div.appendChild(container);
-        });
+      });
+      
+      resetSelectDropdown()
+
+      function resetSelectDropdown() {
+        // Clear the select
+        select = document.getElementById('selectNode')
+        select.innerHTML= ""
+
+        // Add an option for each node
+        curr_nodes = nodes.get({ returnType: "object" });
+        curr_nodes.forEach(n =>{
+          opt = document.createElement('option');
+          opt.value = n.id;
+          opt.innerHTML = n.id;
+          select.add(opt)
+        })
+
+
+      }
+
+      function handleClickOnNode(params) {
+          selected_nodes = network.getSelectedNodes();
+          if (selected_nodes.length == 1) {
+            neighbourhoodHighlight(params, degrees);
+          } else if (selected_nodes.length == 2) {
+            highlightPathBetweenNodes(selected_nodes[0], selected_nodes[1]) 
+            network.setSelection({nodes: []})           
+          } else {
+            network.setSelection({nodes: []}) 
+            neighbourhoodHighlight({nodes: []});
+          }
+          
+
+        
+      }
 
       // This handler will only ever show one ingredient
       // Eg: even if there's 7 wheats selected, only 1 wheat will be shown
@@ -4736,6 +4778,7 @@
           ingredient_changed.size = (currentValue * 10.0) + 15;
           nodes.update(ingredient_changed);
         }
+        resetSelectDropdown()
       }
 
       function deleteNodeByID(node_id) {
@@ -4807,6 +4850,7 @@
           neighbourhoodHighlight(network.getSelection(), degrees)
         }
       }
+      
 
       // Reset all ingredients to zero, thus clearing the graph entirely
       function clearAllIngredients() {
@@ -4820,13 +4864,14 @@
           function(ingredient_count_selector) {
             ingredient_count_selector.value = 0; 
             ingredient_count_selector.setAttribute("data-prev-value", 0);
-            // deleteNodeByID(ingredient_count_selector.name);
           } 
         )
         // Delete all the nodes
         network.body.data.nodes.remove(nodes.get({ returnType: "object" }));
         network.body.data.edges.remove(edges.get({ returnType: "object" }));
 
+        
+        resetSelectDropdown()
       }
 
       function addAllIngredients() {
@@ -4844,8 +4889,7 @@
         network.body.data.nodes.add(node_list);
         network.body.data.edges.add(edge_list);
 
-        // // Remove highlight (or things will come back weird)
-        // neighbourhoodHighlight({nodes: []});
+        resetSelectDropdown()
         
       }
 

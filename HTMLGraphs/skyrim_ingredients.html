@@ -4695,7 +4695,7 @@
           input.min = 0;
           input.className = "ingredient-input";
           input.setAttribute("data-prev-value", input_original_val);
-          input.addEventListener("change", handleIngredientExistsChange);
+          input.addEventListener("change", handleIngredientCountChange);
 
           // Append label and input to the container
           container.appendChild(label);
@@ -4707,9 +4707,7 @@
 
       // This handler will only ever show one ingredient
       // Eg: even if there's 7 wheats selected, only 1 wheat will be shown
-      function handleIngredientExistsChange(event) {
-        console.log("hangling ingredient exists change")
-        console.log(event.target)
+      function handleIngredientCountChange(event) {
         // console.log(tyepof event.target)
         // Get the current and previous values
         let currentValue = parseInt(event.target.value, 10);
@@ -4728,7 +4726,6 @@
 
         // Ingredient count went above 0
         if (currentValue > 0 && currentValue != previousValue) {
-          console.log("Incremented Input Name:", event.target.name);
 
           if (previousValue == 0) {
             addIngredientBack(event.target.name);
@@ -4744,17 +4741,12 @@
       function deleteNodeByID(node_id) {
         // network.setSelection({ nodes: [node_id] });
         // network.deleteSelected();
-        console.log("deleting node")
-        console.log(node_id)
         network.body.data.nodes.remove(node_id);
         var edges_to_delete = edges.get({ returnType: "object" }).filter(e => e.to == node_id || e.from == node_id);
-        console.log("deleting edges")
-        console.log(edges_to_delete)
         network.body.data.edges.remove(edges_to_delete);
       }
 
       function deleteUnattachedNodes(curr_node_list, permissable_num_connects) {
-        console.log("deleting unusable effect nodes");
         var curr_edges = edges.get({ returnType: "object" });
         // Get ids for all unattached nodes in node list
         var unattached_effect_nodes = curr_node_list
@@ -4765,13 +4757,9 @@
           )
           .map((enode) => enode.id);
         // and then delete them
-        console.log(unattached_effect_nodes);
         unattached_effect_nodes.forEach((nid) =>
           network.body.data.nodes.remove(nid)
         );
-        // network.setSelection({ nodes: unattached_effect_nodes });
-        // console.log("selected above");
-        // network.deleteSelected();
       }
 
       function deleteAllUnattachedNodes() {
@@ -4787,26 +4775,24 @@
       }
 
       function addIngredientBack(selected_ingredient_id) {
-        // get the edges which are valid for this ingredient
-        var ingredient_to_add = node_list.filter(
-          (n) => n.id == selected_ingredient_id
-        )[0];
+        
+        // get ingredient to add
+        var ingredient_to_add = node_list.filter((n) => n.id == selected_ingredient_id)[0];
         ingredient_to_add.size = 20.0;
+
+        // Get edges to add
         var edges_to_add = edge_list.filter(
           (e) => e.to == selected_ingredient_id
         );
-        var curr_nodes = nodes.get({ returnType: "object" });
+        // work out what edges to add
         var linked_nodes = edges_to_add.map((e) => e.from);
         var curr_effects_edges = edges.get({ returnType: "object" }).map(e => e.from);
+        var curr_nodes = nodes.get({ returnType: "object" });
         var node_ids_to_add = linked_nodes.filter(
           (e) => !curr_nodes.map((n) => n.id).includes(e)
         ).filter(
           (e) => curr_effects_edges.includes(e)
         );
-        console.log("linked nodes");
-        console.log(linked_nodes);
-        console.log("node ids to add");
-        console.log(node_ids_to_add);
         var nodes_to_add = node_list.filter((n) =>
           node_ids_to_add.includes(n.id)
         );
@@ -4824,31 +4810,39 @@
 
       // Reset all ingredients to zero, thus clearing the graph entirely
       function clearAllIngredients() {
+        console.log('clear all ingredients')
+        // Remove highlight (or things will come back weird)
+        neighbourhoodHighlight({nodes: []});
+        network.setSelection({nodes: []});
+
         // For each ingredient, reset the input and delete the node
         Array.from(document.querySelectorAll('.ingredient-input')).forEach(
           function(ingredient_count_selector) {
             ingredient_count_selector.value = 0; 
             ingredient_count_selector.setAttribute("data-prev-value", 0);
-            deleteNodeByID(ingredient_count_selector.name);
+            // deleteNodeByID(ingredient_count_selector.name);
           } 
         )
         // Delete all the nodes
-        deleteAllUnattachedNodes();
+        network.body.data.nodes.remove(nodes.get({ returnType: "object" }));
+        network.body.data.edges.remove(edges.get({ returnType: "object" }));
 
-        // Remove highlight (or things will come back weird)
-        neighbourhoodHighlight({nodes: []});
       }
 
       function addAllIngredients() {
+        clearAllIngredients()
         // For each ingredient, reset the input and delete the node
+        console.log("Adding all ingredients back")
         Array.from(document.querySelectorAll('.ingredient-input')).forEach(
           function(ingredient_count_selector) {
             ingredient_count_selector.value = 1; 
-            // ingredient_count_selector.setAttribute("data-prev-value", 1);
-            // addIngredientBack(ingredient_count_selector.name);
-            handleIngredientExistsChange({target: ingredient_count_selector})
+            // console.log('selected node: ', network.getSelection())
+            // handleIngredientCountChange({target: ingredient_count_selector})
           } 
         )
+
+        network.body.data.nodes.add(node_list);
+        network.body.data.edges.add(edge_list);
 
         // // Remove highlight (or things will come back weird)
         // neighbourhoodHighlight({nodes: []});

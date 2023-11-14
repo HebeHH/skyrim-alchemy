@@ -3,20 +3,22 @@
 function neighbourhoodHighlight(params, degrees = 5) {
   allNodes = nodes.get({ returnType: "Object" });
   console.log("in neighborhood highlight, highlight active: ", highlightActive, ", degrees: ", degrees)
-  
   // if something is selected:
   if (params.nodes.length > 0) {
     highlightActive = true;
     var i, j;
     var selectedNode = params.nodes[0];
     // mark all nodes as hard to read.
+
     for (let nodeId in allNodes) {
       allNodes[nodeId].color = "rgba(120,180,180,0.3)";
     }
+
     // reset all edges to inherit color
     curr_edges = edges.get({ returnType: "object" });
     curr_edges.forEach(e => e.color = {inherit: true})
     edges.update(curr_edges)
+
 
 
     // set the color madding for nodes and edges at each degree
@@ -74,6 +76,7 @@ function neighbourhoodHighlight(params, degrees = 5) {
     var allConnectedNodes = [selectedNode] // keeps track of whether node already in a higher degree
     var connectedNodesByDegrees = [[selectedNode]]
     var allConnectedEdges = [] // keeps track of whether node already in a higher degree
+    var edges_to_update = []
 
     // Get all connected nodes for each degree, without duplicates
     for (i = 0; i < degrees + 1; i++) {
@@ -88,7 +91,7 @@ function neighbourhoodHighlight(params, degrees = 5) {
       connectedEdgesAtDegree = [...new Set(connectedEdgesAtDegree.flat())].filter(nid => !allConnectedEdges.includes(nid));
       allConnectedEdges = allConnectedEdges.concat(connectedEdgesAtDegree)
       // update color for edges at this degree
-      edges.update(connectedEdgesAtDegree.map(e => ({id:e,color: getColorAtDegree(i).edgeColor})));
+      edges_to_update = edges_to_update.concat(connectedEdgesAtDegree.map(e => ({id:e,color: getColorAtDegree(i).edgeColor})));
       
       // get new nodes to update if necessary
       if (i < degrees) {
@@ -101,6 +104,7 @@ function neighbourhoodHighlight(params, degrees = 5) {
         connectedNodesByDegrees = connectedNodesByDegrees.concat([connectedNodesAtDegree])
       }
     }
+    edges.update(edges_to_update)
 
     
   } 
@@ -111,8 +115,10 @@ function neighbourhoodHighlight(params, degrees = 5) {
     // reset all nodes
     for (let nodeId in allNodes) {
       allNodes[nodeId].color = nodeColors[nodeId];
-      network.getConnectedEdges(nodeId).forEach(e => edges.update({id:e,color:{inherit: true}}))
     }
+    curr_edges = edges.get({ returnType: "object" });
+    curr_edges.forEach(e => e.color = {inherit: true})
+    edges.update(curr_edges)
     highlightActive = false;
   }
 
@@ -131,7 +137,15 @@ function neighbourhoodHighlight(params, degrees = 5) {
         updateArray.push(allNodes[nodeId]);
       }
     }
+
+
     nodes.update(updateArray);
+
+    
+    console.log(node_list)
+    for (let index = 0; index < node_list.length; index++) {
+      node_list[index].color = nodeColors[node_list[index].id];
+    }
   }
 }
 

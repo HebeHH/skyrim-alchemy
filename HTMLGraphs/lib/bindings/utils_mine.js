@@ -1,4 +1,58 @@
- 
+function findPathsBetweenNodes(node_a, node_b, curr_edges = false, max_path_length = 5) {
+  if (!curr_edges) { curr_edges = edges.get({ returnType: "object" }); }
+  
+  workable_paths = []
+
+  function check_next_step(path, curr_node, prev_node) {
+      if (path.length > max_path_length) { return; }
+      if (curr_node == node_b) {
+          workable_paths = workable_paths.concat([path]);
+          return;
+      }
+      next_edges = curr_edges.filter(
+          e => curr_node.startsWith('Ing') ? e.to == curr_node : e.from == curr_node 
+          ).filter(e => curr_node.startsWith('Ing') ? e.from != prev_node : e.to != prev_node)
+      next_edges.forEach(e => {
+          check_next_step(
+              path.concat([e]), 
+              curr_node.startsWith('Ing') ? e.from  : e.to,
+              curr_node
+          )
+      });        
+  }
+
+  check_next_step([], node_a, '')
+  return workable_paths
+
+}
+
+function highlightPathBetweenNodes(node_a, node_b) {
+  highlightActive = true;
+
+  // get current graph
+  curr_nodes = nodes.get({ returnType: "object" });
+  curr_edges = edges.get({ returnType: "object" });
+
+  paths = findPathsBetweenNodes(node_a, node_b, curr_edges)
+  console.log(paths)
+  highlight_paths = [...new Set(paths.flat())]
+  highlight_edges = highlight_paths.map(he => he.id)
+  highlight_nodes = [...new Set(highlight_paths.map(e => [e.from, e.to]).flat())]
+
+  // for (let nodeId in curr_nodes) {
+  //   curr_nodes[nodeId].color = "rgba(120,180,180,0.3)";
+  // }
+
+  // Change node colors: ones in a path bright, all others hard to see
+  curr_edges.forEach(e =>  e.color = ( highlight_edges.includes(e.id) ? 'cyan' : "rgba(120,180,180,0.3)"))
+  edges.update(curr_edges)
+  
+  // Change edge colors: ones in a path bright, all others hard to see
+  curr_nodes.forEach(n =>  n.color = ( highlight_nodes.includes(n.id) ? nodeColors[n.id] : "rgba(120,180,180,0.3)"))
+  nodes.update(curr_nodes)
+  
+}
+
 
 function neighbourhoodHighlight(params, degrees = 5) {
   allNodes = nodes.get({ returnType: "Object" });

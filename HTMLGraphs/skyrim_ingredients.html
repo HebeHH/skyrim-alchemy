@@ -1,0 +1,4898 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="lib/bindings/utils_mine.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css"
+      integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js"
+      integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link href="lib/tom-select/tom-select.css" rel="stylesheet" />
+    <script src="lib/tom-select/tom-select.complete.min.js"></script>
+
+    <center>
+      <h1></h1>
+    </center>
+
+    <!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+      crossorigin="anonymous"
+    ></script>
+
+    <center>
+      <h1></h1>
+    </center>
+    <style type="text/css">
+      #mynetwork {
+        width: 95%;
+        height: 55em;
+        margin-left: 2.5%;
+        background-color: black;
+        border: 1px solid lightgray;
+        position: relative;
+        float: center;
+      }
+
+      #config {
+        float: left;
+        width: 400px;
+        height: 600px;
+      }
+
+      #add_ingredients {
+        /* visibility: hidden; */
+        display: none;
+        flex-wrap: wrap;
+        gap: 1px; /* Adjust the gap between items */
+      }
+
+      #add_ingredients.visible {
+        display: flex;
+      }
+
+      /* #dropdown-toggle { */
+        /* Style your toggle button */
+        /* Add more styling as needed */
+      /* } */
+      button {
+        margin-bottom: 0.5em;
+        margin-left: 2.5%;
+        cursor: pointer;
+        
+      }
+
+      .ingredient-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        font-size: 0.7em;
+        /* flex-basis: 30%; Adjust this basis as needed */
+        width: 15em; /* Minimum width for each container */
+      }
+
+      .ingredient-label {
+        flex-basis: 10em; /* Fixed width for labels */
+        margin-right: 1px;
+        text-align: right;
+        padding-right: 0.4em;
+      }
+
+      .ingredient-input {
+        width: 3em; /* Adjust as needed */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card" style="width: 100%">
+      <div id="select-menu" class="card-header">
+        <div class="row no-gutters">
+          <div class="col-10 pb-2">
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              onchange="selectNode([value]);"
+              id="select-node"
+              placeholder="Select node..."
+            >
+              <option selected>Select a Node by ID</option>
+
+              <option value="Ingredient: Abecean Longfin">
+                Ingredient: Abecean Longfin
+              </option>
+
+              <option value="Ingredient: Bear Claws">
+                Ingredient: Bear Claws
+              </option>
+
+              <option value="Ingredient: Bee">Ingredient: Bee</option>
+
+              <option value="Ingredient: Beehive Husk">
+                Ingredient: Beehive Husk
+              </option>
+
+              <option value="Ingredient: Bleeding Crown">
+                Ingredient: Bleeding Crown
+              </option>
+
+              <option value="Ingredient: Blisterwort">
+                Ingredient: Blisterwort
+              </option>
+
+              <option value="Ingredient: Blue Butterfly Wing">
+                Ingredient: Blue Butterfly Wing
+              </option>
+
+              <option value="Ingredient: Blue Dartwing">
+                Ingredient: Blue Dartwing
+              </option>
+
+              <option value="Ingredient: Blue Mountain Flower">
+                Ingredient: Blue Mountain Flower
+              </option>
+
+              <option value="Ingredient: Bone Meal">
+                Ingredient: Bone Meal
+              </option>
+
+              <option value="Ingredient: Briar Heart">
+                Ingredient: Briar Heart
+              </option>
+
+              <option value="Ingredient: Butterfly Wing">
+                Ingredient: Butterfly Wing
+              </option>
+
+              <option value="Ingredient: Canis Root">
+                Ingredient: Canis Root
+              </option>
+
+              <option value="Ingredient: Charred Skeever Hide">
+                Ingredient: Charred Skeever Hide
+              </option>
+
+              <option value="Ingredient: Chaurus Eggs">
+                Ingredient: Chaurus Eggs
+              </option>
+
+              <option value="Ingredient: Chicken's Egg">
+                Ingredient: Chicken's Egg
+              </option>
+
+              <option value="Ingredient: Creep Cluster">
+                Ingredient: Creep Cluster
+              </option>
+
+              <option value="Ingredient: Crimson Nirnroot">
+                Ingredient: Crimson Nirnroot
+              </option>
+
+              <option value="Ingredient: Cyrodilic Spadetail">
+                Ingredient: Cyrodilic Spadetail
+              </option>
+
+              <option value="Ingredient: Daedra Heart">
+                Ingredient: Daedra Heart
+              </option>
+
+              <option value="Ingredient: Deathbell">
+                Ingredient: Deathbell
+              </option>
+
+              <option value="Ingredient: Dragon's Tongue">
+                Ingredient: Dragon's Tongue
+              </option>
+
+              <option value="Ingredient: Dwarven Oil">
+                Ingredient: Dwarven Oil
+              </option>
+
+              <option value="Ingredient: Ectoplasm">
+                Ingredient: Ectoplasm
+              </option>
+
+              <option value="Ingredient: Elves Ear">
+                Ingredient: Elves Ear
+              </option>
+
+              <option value="Ingredient: Eye of Sabre Cat">
+                Ingredient: Eye of Sabre Cat
+              </option>
+
+              <option value="Ingredient: Falmer Ear">
+                Ingredient: Falmer Ear
+              </option>
+
+              <option value="Ingredient: Fire Salts">
+                Ingredient: Fire Salts
+              </option>
+
+              <option value="Ingredient: Fly Amanita">
+                Ingredient: Fly Amanita
+              </option>
+
+              <option value="Ingredient: Frost Mirriam">
+                Ingredient: Frost Mirriam
+              </option>
+
+              <option value="Ingredient: Frost Salts">
+                Ingredient: Frost Salts
+              </option>
+
+              <option value="Ingredient: Garlic">Ingredient: Garlic</option>
+
+              <option value="Ingredient: Giant Lichen">
+                Ingredient: Giant Lichen
+              </option>
+
+              <option value="Ingredient: Giant's Toe">
+                Ingredient: Giant's Toe
+              </option>
+
+              <option value="Ingredient: Glow Dust">
+                Ingredient: Glow Dust
+              </option>
+
+              <option value="Ingredient: Glowing Mushroom">
+                Ingredient: Glowing Mushroom
+              </option>
+
+              <option value="Ingredient: Grass Pod">
+                Ingredient: Grass Pod
+              </option>
+
+              <option value="Ingredient: Hagraven Claw">
+                Ingredient: Hagraven Claw
+              </option>
+
+              <option value="Ingredient: Hagraven Feathers">
+                Ingredient: Hagraven Feathers
+              </option>
+
+              <option value="Ingredient: Hanging Moss">
+                Ingredient: Hanging Moss
+              </option>
+
+              <option value="Ingredient: Hawk Beak">
+                Ingredient: Hawk Beak
+              </option>
+
+              <option value="Ingredient: Hawk Feathers">
+                Ingredient: Hawk Feathers
+              </option>
+
+              <option value="Ingredient: Histcarp">Ingredient: Histcarp</option>
+
+              <option value="Ingredient: Honeycomb">
+                Ingredient: Honeycomb
+              </option>
+
+              <option value="Ingredient: Human Flesh">
+                Ingredient: Human Flesh
+              </option>
+
+              <option value="Ingredient: Human Heart">
+                Ingredient: Human Heart
+              </option>
+
+              <option value="Ingredient: Ice Wraith Teeth">
+                Ingredient: Ice Wraith Teeth
+              </option>
+
+              <option value="Ingredient: Imp Stool">
+                Ingredient: Imp Stool
+              </option>
+
+              <option value="Ingredient: Jazbay Grapes">
+                Ingredient: Jazbay Grapes
+              </option>
+
+              <option value="Ingredient: Juniper Berries">
+                Ingredient: Juniper Berries
+              </option>
+
+              <option value="Ingredient: Large Antlers">
+                Ingredient: Large Antlers
+              </option>
+
+              <option value="Ingredient: Lavender">Ingredient: Lavender</option>
+
+              <option value="Ingredient: Luna Moth Wing">
+                Ingredient: Luna Moth Wing
+              </option>
+
+              <option value="Ingredient: Moon Sugar">
+                Ingredient: Moon Sugar
+              </option>
+
+              <option value="Ingredient: Mora Tapinella">
+                Ingredient: Mora Tapinella
+              </option>
+
+              <option value="Ingredient: Mudcrab Chitin">
+                Ingredient: Mudcrab Chitin
+              </option>
+
+              <option value="Ingredient: Namira's Rot">
+                Ingredient: Namira's Rot
+              </option>
+
+              <option value="Ingredient: Nightshade">
+                Ingredient: Nightshade
+              </option>
+
+              <option value="Ingredient: Nirnroot">Ingredient: Nirnroot</option>
+
+              <option value="Ingredient: Nordic Barnacle">
+                Ingredient: Nordic Barnacle
+              </option>
+
+              <option value="Ingredient: Orange Dartwing">
+                Ingredient: Orange Dartwing
+              </option>
+
+              <option value="Ingredient: Pearl">Ingredient: Pearl</option>
+
+              <option value="Ingredient: Pine Thrush Egg">
+                Ingredient: Pine Thrush Egg
+              </option>
+
+              <option value="Ingredient: Powdered Mammoth Tusk">
+                Ingredient: Powdered Mammoth Tusk
+              </option>
+
+              <option value="Ingredient: Purple Mountain Flower">
+                Ingredient: Purple Mountain Flower
+              </option>
+
+              <option value="Ingredient: Red Mountain Flower">
+                Ingredient: Red Mountain Flower
+              </option>
+
+              <option value="Ingredient: River Betty">
+                Ingredient: River Betty
+              </option>
+
+              <option value="Ingredient: Rock Warbler Egg">
+                Ingredient: Rock Warbler Egg
+              </option>
+
+              <option value="Ingredient: Sabre Cat Tooth">
+                Ingredient: Sabre Cat Tooth
+              </option>
+
+              <option value="Ingredient: Salt Pile">
+                Ingredient: Salt Pile
+              </option>
+
+              <option value="Ingredient: Scaly Pholiota">
+                Ingredient: Scaly Pholiota
+              </option>
+
+              <option value="Ingredient: Silverside Perch">
+                Ingredient: Silverside Perch
+              </option>
+
+              <option value="Ingredient: Skeever Tail">
+                Ingredient: Skeever Tail
+              </option>
+
+              <option value="Ingredient: Slaughterfish Egg">
+                Ingredient: Slaughterfish Egg
+              </option>
+
+              <option value="Ingredient: Slaughterfish Scales">
+                Ingredient: Slaughterfish Scales
+              </option>
+
+              <option value="Ingredient: Small Antlers">
+                Ingredient: Small Antlers
+              </option>
+
+              <option value="Ingredient: Small Pearl">
+                Ingredient: Small Pearl
+              </option>
+
+              <option value="Ingredient: Snowberries">
+                Ingredient: Snowberries
+              </option>
+
+              <option value="Ingredient: Spider Egg">
+                Ingredient: Spider Egg
+              </option>
+
+              <option value="Ingredient: Spriggan Sap">
+                Ingredient: Spriggan Sap
+              </option>
+
+              <option value="Ingredient: Swamp Fungal Pod">
+                Ingredient: Swamp Fungal Pod
+              </option>
+
+              <option value="Ingredient: Taproot">Ingredient: Taproot</option>
+
+              <option value="Ingredient: Thistle Branch">
+                Ingredient: Thistle Branch
+              </option>
+
+              <option value="Ingredient: Torchbug Thorax">
+                Ingredient: Torchbug Thorax
+              </option>
+
+              <option value="Ingredient: Troll Fat">
+                Ingredient: Troll Fat
+              </option>
+
+              <option value="Ingredient: Tundra Cotton">
+                Ingredient: Tundra Cotton
+              </option>
+
+              <option value="Ingredient: Vampire Dust">
+                Ingredient: Vampire Dust
+              </option>
+
+              <option value="Ingredient: Void Salts">
+                Ingredient: Void Salts
+              </option>
+
+              <option value="Ingredient: Wheat">Ingredient: Wheat</option>
+
+              <option value="Ingredient: White Cap">
+                Ingredient: White Cap
+              </option>
+
+              <option value="Ingredient: Wisp Wrappings">
+                Ingredient: Wisp Wrappings
+              </option>
+
+              <option value="Effect: Fortify Lockpicking">
+                Effect: Fortify Lockpicking
+              </option>
+
+              <option value="Effect: Fortify One-handed">
+                Effect: Fortify One-handed
+              </option>
+
+              <option value="Effect: Resist Shock">Effect: Resist Shock</option>
+
+              <option value="Effect: Damage Stamina Regen">
+                Effect: Damage Stamina Regen
+              </option>
+
+              <option value="Effect: Fortify Smithing">
+                Effect: Fortify Smithing
+              </option>
+
+              <option value="Effect: Fortify Conjuration">
+                Effect: Fortify Conjuration
+              </option>
+
+              <option value="Effect: Fortify Health">
+                Effect: Fortify Health
+              </option>
+
+              <option value="Effect: Ravage Health">
+                Effect: Ravage Health
+              </option>
+
+              <option value="Effect: Damage Health">
+                Effect: Damage Health
+              </option>
+
+              <option value="Effect: Fortify Sneak">
+                Effect: Fortify Sneak
+              </option>
+
+              <option value="Effect: Regenerate Health">
+                Effect: Regenerate Health
+              </option>
+
+              <option value="Effect: Weakness to Poison">
+                Effect: Weakness to Poison
+              </option>
+
+              <option value="Effect: Resist Fire">Effect: Resist Fire</option>
+
+              <option value="Effect: Damage Magicka">
+                Effect: Damage Magicka
+              </option>
+
+              <option value="Effect: Damage Stamina">
+                Effect: Damage Stamina
+              </option>
+
+              <option value="Effect: Weakness to Shock">
+                Effect: Weakness to Shock
+              </option>
+
+              <option value="Effect: Lingering Damage Stamina">
+                Effect: Lingering Damage Stamina
+              </option>
+
+              <option value="Effect: Frenzy">Effect: Frenzy</option>
+
+              <option value="Effect: Fortify Stamina">
+                Effect: Fortify Stamina
+              </option>
+
+              <option value="Effect: Fortify Light Armor">
+                Effect: Fortify Light Armor
+              </option>
+
+              <option value="Effect: Fortify Carry Weight">
+                Effect: Fortify Carry Weight
+              </option>
+
+              <option value="Effect: Slow">Effect: Slow</option>
+
+              <option value="Effect: Fortify Alteration">
+                Effect: Fortify Alteration
+              </option>
+
+              <option value="Effect: Lingering Damage Health">
+                Effect: Lingering Damage Health
+              </option>
+
+              <option value="Effect: Fear">Effect: Fear</option>
+
+              <option value="Effect: Cure Disease">Effect: Cure Disease</option>
+
+              <option value="Effect: Restore Stamina">
+                Effect: Restore Stamina
+              </option>
+
+              <option value="Effect: Fortify Destruction">
+                Effect: Fortify Destruction
+              </option>
+
+              <option value="Effect: Fortify Pickpocket">
+                Effect: Fortify Pickpocket
+              </option>
+
+              <option value="Effect: Resist Magic">Effect: Resist Magic</option>
+
+              <option value="Effect: Waterbreathing">
+                Effect: Waterbreathing
+              </option>
+
+              <option value="Effect: Invisibility">Effect: Invisibility</option>
+
+              <option value="Effect: Fortify Illusion">
+                Effect: Fortify Illusion
+              </option>
+
+              <option value="Effect: Regenerate Stamina">
+                Effect: Regenerate Stamina
+              </option>
+
+              <option value="Effect: Paralysis">Effect: Paralysis</option>
+
+              <option value="Effect: Damage Magicka Regen">
+                Effect: Damage Magicka Regen
+              </option>
+
+              <option value="Effect: Restore Magicka">
+                Effect: Restore Magicka
+              </option>
+
+              <option value="Effect: Restore Health">
+                Effect: Restore Health
+              </option>
+
+              <option value="Effect: Weakness to Frost">
+                Effect: Weakness to Frost
+              </option>
+
+              <option value="Effect: Ravage Magicka">
+                Effect: Ravage Magicka
+              </option>
+
+              <option value="Effect: Weakness to Fire">
+                Effect: Weakness to Fire
+              </option>
+
+              <option value="Effect: Lingering Damage Magicka">
+                Effect: Lingering Damage Magicka
+              </option>
+
+              <option value="Effect: Fortify Heavy Armor">
+                Effect: Fortify Heavy Armor
+              </option>
+
+              <option value="Effect: Fortify Two-handed">
+                Effect: Fortify Two-handed
+              </option>
+
+              <option value="Effect: Fortify Magicka">
+                Effect: Fortify Magicka
+              </option>
+
+              <option value="Effect: Resist Poison">
+                Effect: Resist Poison
+              </option>
+
+              <option value="Effect: Fortify Block">
+                Effect: Fortify Block
+              </option>
+
+              <option value="Effect: Weakness to Magic">
+                Effect: Weakness to Magic
+              </option>
+
+              <option value="Effect: Fortify Enchanting">
+                Effect: Fortify Enchanting
+              </option>
+
+              <option value="Effect: Resist Frost">Effect: Resist Frost</option>
+
+              <option value="Effect: Regenerate Magicka">
+                Effect: Regenerate Magicka
+              </option>
+
+              <option value="Effect: Fortify Restoration">
+                Effect: Fortify Restoration
+              </option>
+
+              <option value="Effect: Fortify Barter">
+                Effect: Fortify Barter
+              </option>
+
+              <option value="Effect: Ravage Stamina">
+                Effect: Ravage Stamina
+              </option>
+
+              <option value="Effect: Fortify Marksman">
+                Effect: Fortify Marksman
+              </option>
+            </select>
+          </div>
+          <div class="col-2 pb-2">
+            <button
+              type="button"
+              class="btn btn-primary btn-block"
+              onclick="neighbourhoodHighlight({nodes: []});"
+            >
+              Reset Selection
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="dropdown-container">
+        <button id="clear-all-toggle" onclick="clearAllIngredients()">Clear All.</button>
+        <button id="dropdown-toggle">Change ingredients inventory ></button>
+        <div id="add_ingredients"></div>
+      </div>
+
+      <div id="mynetwork" class="card-body"></div>
+    </div>
+
+    <div id="config"></div>
+
+    <script>
+      document
+        .getElementById("dropdown-toggle")
+        .addEventListener("click", function () {
+          console.log("dropdown hit");
+          var content = document.getElementById("add_ingredients");
+          content.classList.toggle("visible");
+        });
+    </script>
+
+    <script type="text/javascript">
+      // initialize global variables.
+      var edges;
+      var nodes;
+      var allNodes;
+      var allEdges;
+      var nodeColors;
+      var originalNodes;
+      var network;
+      var container;
+      var options, data;
+      var highlightActive = false;
+      var filter = {
+        item: "",
+        property: "",
+        value: [],
+      };
+
+      var node_list = [
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Abecean Longfin",
+          label: "  Abecean Longfin  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Bear Claws",
+          label: "  Bear Claws  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Bee",
+          label: "  Bee  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Beehive Husk",
+          label: "  Beehive Husk  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Bleeding Crown",
+          label: "  Bleeding Crown  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Blisterwort",
+          label: "  Blisterwort  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Blue Butterfly Wing",
+          label: "  Blue Butterfly Wing  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Blue Dartwing",
+          label: "  Blue Dartwing  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Blue Mountain Flower",
+          label: "  Blue Mountain Flower  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Bone Meal",
+          label: "  Bone Meal  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Briar Heart",
+          label: "  Briar Heart  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Butterfly Wing",
+          label: "  Butterfly Wing  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Canis Root",
+          label: "  Canis Root  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Charred Skeever Hide",
+          label: "  Charred Skeever Hide  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Chaurus Eggs",
+          label: "  Chaurus Eggs  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Chicken\u0027s Egg",
+          label: "  Chicken\u0027s Egg  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Creep Cluster",
+          label: "  Creep Cluster  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Crimson Nirnroot",
+          label: "  Crimson Nirnroot  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Cyrodilic Spadetail",
+          label: "  Cyrodilic Spadetail  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Daedra Heart",
+          label: "  Daedra Heart  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Deathbell",
+          label: "  Deathbell  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Dragon\u0027s Tongue",
+          label: "  Dragon\u0027s Tongue  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Dwarven Oil",
+          label: "  Dwarven Oil  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Ectoplasm",
+          label: "  Ectoplasm  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Elves Ear",
+          label: "  Elves Ear  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Eye of Sabre Cat",
+          label: "  Eye of Sabre Cat  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Falmer Ear",
+          label: "  Falmer Ear  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Fire Salts",
+          label: "  Fire Salts  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Fly Amanita",
+          label: "  Fly Amanita  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Frost Mirriam",
+          label: "  Frost Mirriam  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Frost Salts",
+          label: "  Frost Salts  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Garlic",
+          label: "  Garlic  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Giant Lichen",
+          label: "  Giant Lichen  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Giant\u0027s Toe",
+          label: "  Giant\u0027s Toe  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Glow Dust",
+          label: "  Glow Dust  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Glowing Mushroom",
+          label: "  Glowing Mushroom  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Grass Pod",
+          label: "  Grass Pod  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Hagraven Claw",
+          label: "  Hagraven Claw  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Hagraven Feathers",
+          label: "  Hagraven Feathers  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Hanging Moss",
+          label: "  Hanging Moss  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Hawk Beak",
+          label: "  Hawk Beak  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Hawk Feathers",
+          label: "  Hawk Feathers  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Histcarp",
+          label: "  Histcarp  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Honeycomb",
+          label: "  Honeycomb  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Human Flesh",
+          label: "  Human Flesh  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Human Heart",
+          label: "  Human Heart  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Ice Wraith Teeth",
+          label: "  Ice Wraith Teeth  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Imp Stool",
+          label: "  Imp Stool  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Jazbay Grapes",
+          label: "  Jazbay Grapes  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Juniper Berries",
+          label: "  Juniper Berries  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Large Antlers",
+          label: "  Large Antlers  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Lavender",
+          label: "  Lavender  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Luna Moth Wing",
+          label: "  Luna Moth Wing  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Moon Sugar",
+          label: "  Moon Sugar  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Mora Tapinella",
+          label: "  Mora Tapinella  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Mudcrab Chitin",
+          label: "  Mudcrab Chitin  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Namira\u0027s Rot",
+          label: "  Namira\u0027s Rot  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Nightshade",
+          label: "  Nightshade  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Nirnroot",
+          label: "  Nirnroot  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Nordic Barnacle",
+          label: "  Nordic Barnacle  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Orange Dartwing",
+          label: "  Orange Dartwing  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Pearl",
+          label: "  Pearl  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Pine Thrush Egg",
+          label: "  Pine Thrush Egg  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Powdered Mammoth Tusk",
+          label: "  Powdered Mammoth Tusk  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Purple Mountain Flower",
+          label: "  Purple Mountain Flower  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Red Mountain Flower",
+          label: "  Red Mountain Flower  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: River Betty",
+          label: "  River Betty  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Rock Warbler Egg",
+          label: "  Rock Warbler Egg  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Sabre Cat Tooth",
+          label: "  Sabre Cat Tooth  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Salt Pile",
+          label: "  Salt Pile  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Scaly Pholiota",
+          label: "  Scaly Pholiota  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Silverside Perch",
+          label: "  Silverside Perch  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Skeever Tail",
+          label: "  Skeever Tail  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Slaughterfish Egg",
+          label: "  Slaughterfish Egg  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Slaughterfish Scales",
+          label: "  Slaughterfish Scales  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Small Antlers",
+          label: "  Small Antlers  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Small Pearl",
+          label: "  Small Pearl  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Snowberries",
+          label: "  Snowberries  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Spider Egg",
+          label: "  Spider Egg  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Spriggan Sap",
+          label: "  Spriggan Sap  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Swamp Fungal Pod",
+          label: "  Swamp Fungal Pod  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Taproot",
+          label: "  Taproot  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Thistle Branch",
+          label: "  Thistle Branch  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Torchbug Thorax",
+          label: "  Torchbug Thorax  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Troll Fat",
+          label: "  Troll Fat  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Tundra Cotton",
+          label: "  Tundra Cotton  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Vampire Dust",
+          label: "  Vampire Dust  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Void Salts",
+          label: "  Void Salts  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 1,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Wheat",
+          label: "  Wheat  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: White Cap",
+          label: "  White Cap  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          basic: 0,
+          category: "ingredient",
+          color: {
+            background: "#855600",
+            border: "#f7ff92",
+            highlight: { background: "#454B53", border: "#fff800" },
+          },
+          font: { color: "white" },
+          id: "Ingredient: Wisp Wrappings",
+          label: "  Wisp Wrappings  ",
+          shape: "dot",
+          size: 25,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Lockpicking",
+          label: "\n    Fortify Lockpicking    \n\n",
+          shape: "square",
+          size: 22.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify One-handed",
+          label: "\n    Fortify One-handed    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Resist Shock",
+          label: "\n    Resist Shock    \n\n",
+          shape: "square",
+          size: 50.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Damage Stamina Regen",
+          label: "\n    Damage Stamina Regen    \n\n",
+          shape: "square",
+          size: 86.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Smithing",
+          label: "\n    Fortify Smithing    \n\n",
+          shape: "square",
+          size: 49.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Conjuration",
+          label: "\n    Fortify Conjuration    \n\n",
+          shape: "square",
+          size: 46.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Health",
+          label: "\n    Fortify Health    \n\n",
+          shape: "square",
+          size: 49.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Ravage Health",
+          label: "\n    Ravage Health    \n\n",
+          shape: "square",
+          size: 13.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Damage Health",
+          label: "\n    Damage Health    \n\n",
+          shape: "square",
+          size: 12.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Sneak",
+          label: "\n    Fortify Sneak    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Regenerate Health",
+          label: "\n    Regenerate Health    \n\n",
+          shape: "square",
+          size: 95.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Weakness to Poison",
+          label: "\n    Weakness to Poison    \n\n",
+          shape: "square",
+          size: 35.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Resist Fire",
+          label: "\n    Resist Fire    \n\n",
+          shape: "square",
+          size: 50.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Damage Magicka",
+          label: "\n    Damage Magicka    \n\n",
+          shape: "square",
+          size: 34.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Damage Stamina",
+          label: "\n    Damage Stamina    \n\n",
+          shape: "square",
+          size: 30.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Weakness to Shock",
+          label: "\n    Weakness to Shock    \n\n",
+          shape: "square",
+          size: 36.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Lingering Damage Stamina",
+          label: "\n    Lingering Damage Stamina    \n\n",
+          shape: "square",
+          size: 16.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Frenzy",
+          label: "\n    Frenzy    \n\n",
+          shape: "square",
+          size: 63.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Stamina",
+          label: "\n    Fortify Stamina    \n\n",
+          shape: "square",
+          size: 43.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Light Armor",
+          label: "\n    Fortify Light Armor    \n\n",
+          shape: "square",
+          size: 37.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Carry Weight",
+          label: "\n    Fortify Carry Weight    \n\n",
+          shape: "square",
+          size: 109.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Slow",
+          label: "\n    Slow    \n\n",
+          shape: "square",
+          size: 129.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Alteration",
+          label: "\n    Fortify Alteration    \n\n",
+          shape: "square",
+          size: 32.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Lingering Damage Health",
+          label: "\n    Lingering Damage Health    \n\n",
+          shape: "square",
+          size: 53.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fear",
+          label: "\n    Fear    \n\n",
+          shape: "square",
+          size: 110.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Cure Disease",
+          label: "\n    Cure Disease    \n\n",
+          shape: "square",
+          size: 13.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Restore Stamina",
+          label: "\n    Restore Stamina    \n\n",
+          shape: "square",
+          size: 22.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Destruction",
+          label: "\n    Fortify Destruction    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Pickpocket",
+          label: "\n    Fortify Pickpocket    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Resist Magic",
+          label: "\n    Resist Magic    \n\n",
+          shape: "square",
+          size: 35.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Waterbreathing",
+          label: "\n    Waterbreathing    \n\n",
+          shape: "square",
+          size: 58.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Invisibility",
+          label: "\n    Invisibility    \n\n",
+          shape: "square",
+          size: 134.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Illusion",
+          label: "\n    Fortify Illusion    \n\n",
+          shape: "square",
+          size: 55.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Regenerate Stamina",
+          label: "\n    Regenerate Stamina    \n\n",
+          shape: "square",
+          size: 95.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Paralysis",
+          label: "\n    Paralysis    \n\n",
+          shape: "square",
+          size: 152.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Damage Magicka Regen",
+          label: "\n    Damage Magicka Regen    \n\n",
+          shape: "square",
+          size: 136.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Restore Magicka",
+          label: "\n    Restore Magicka    \n\n",
+          shape: "square",
+          size: 22.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Restore Health",
+          label: "\n    Restore Health    \n\n",
+          shape: "square",
+          size: 20.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Weakness to Frost",
+          label: "\n    Weakness to Frost    \n\n",
+          shape: "square",
+          size: 28.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Ravage Magicka",
+          label: "\n    Ravage Magicka    \n\n",
+          shape: "square",
+          size: 17.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Weakness to Fire",
+          label: "\n    Weakness to Fire    \n\n",
+          shape: "square",
+          size: 32.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Lingering Damage Magicka",
+          label: "\n    Lingering Damage Magicka    \n\n",
+          shape: "square",
+          size: 45.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Heavy Armor",
+          label: "\n    Fortify Heavy Armor    \n\n",
+          shape: "square",
+          size: 37.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Two-handed",
+          label: "\n    Fortify Two-handed    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Magicka",
+          label: "\n    Fortify Magicka    \n\n",
+          shape: "square",
+          size: 44.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#74e876",
+            highlight: { background: "#74e876", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Resist Poison",
+          label: "\n    Resist Poison    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Block",
+          label: "\n    Fortify Block    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Weakness to Magic",
+          label: "\n    Weakness to Magic    \n\n",
+          shape: "square",
+          size: 22.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Enchanting",
+          label: "\n    Fortify Enchanting    \n\n",
+          shape: "square",
+          size: 17.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#2845d7",
+            highlight: { background: "#2845d7", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Resist Frost",
+          label: "\n    Resist Frost    \n\n",
+          shape: "square",
+          size: 50.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#f882f1",
+            highlight: { background: "#f882f1", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Regenerate Magicka",
+          label: "\n    Regenerate Magicka    \n\n",
+          shape: "square",
+          size: 95.5,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Restoration",
+          label: "\n    Fortify Restoration    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Barter",
+          label: "\n    Fortify Barter    \n\n",
+          shape: "square",
+          size: 34.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#950B22",
+            border: "#fce269",
+            highlight: { background: "#fce269", border: "#950B22" },
+          },
+          font: { color: "white" },
+          id: "Effect: Ravage Stamina",
+          label: "\n    Ravage Stamina    \n\n",
+          shape: "square",
+          size: 36.0,
+        },
+        {
+          borderWidth: 3,
+          borderWidthSelected: 6,
+          category: "effect",
+          color: {
+            background: "#23772D",
+            border: "#56C6FE",
+            highlight: { background: "#56C6FE", border: "#23772D" },
+          },
+          font: { color: "white" },
+          id: "Effect: Fortify Marksman",
+          label: "\n    Fortify Marksman    \n\n",
+          shape: "square",
+          size: 66.0,
+        },
+      ];
+      var edge_list = [
+        {
+          from: "Effect: Fortify Lockpicking",
+          to: "Ingredient: Falmer Ear",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Lockpicking",
+          to: "Ingredient: Namira\u0027s Rot",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Lockpicking",
+          to: "Ingredient: Pine Thrush Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Lockpicking",
+          to: "Ingredient: Spider Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify One-handed",
+          to: "Ingredient: Bear Claws",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify One-handed",
+          to: "Ingredient: Canis Root",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify One-handed",
+          to: "Ingredient: Hanging Moss",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify One-handed",
+          to: "Ingredient: Hawk Feathers",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify One-handed",
+          to: "Ingredient: Rock Warbler Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify One-handed",
+          to: "Ingredient: Small Pearl",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Shock",
+          to: "Ingredient: Blue Dartwing",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Shock",
+          to: "Ingredient: Glow Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Shock",
+          to: "Ingredient: Glowing Mushroom",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Shock",
+          to: "Ingredient: Hawk Beak",
+          width: 4,
+        },
+        { from: "Effect: Resist Shock", to: "Ingredient: Pearl", width: 4 },
+        {
+          from: "Effect: Resist Shock",
+          to: "Ingredient: Pine Thrush Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Shock",
+          to: "Ingredient: Snowberries",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Shock",
+          to: "Ingredient: Swamp Fungal Pod",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Creep Cluster",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Daedra Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Frost Mirriam",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Giant\u0027s Toe",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Histcarp",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Juniper Berries",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Large Antlers",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Silverside Perch",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Skeever Tail",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina Regen",
+          to: "Ingredient: Wheat",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Smithing",
+          to: "Ingredient: Blisterwort",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Smithing",
+          to: "Ingredient: Glowing Mushroom",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Smithing",
+          to: "Ingredient: Sabre Cat Tooth",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Smithing",
+          to: "Ingredient: Spriggan Sap",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Conjuration",
+          to: "Ingredient: Blue Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Conjuration",
+          to: "Ingredient: Blue Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Conjuration",
+          to: "Ingredient: Bone Meal",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Conjuration",
+          to: "Ingredient: Frost Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Conjuration",
+          to: "Ingredient: Hagraven Feathers",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Conjuration",
+          to: "Ingredient: Lavender",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Health",
+          to: "Ingredient: Bear Claws",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Health",
+          to: "Ingredient: Blue Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Health",
+          to: "Ingredient: Giant\u0027s Toe",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Health",
+          to: "Ingredient: Glowing Mushroom",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Health",
+          to: "Ingredient: Hanging Moss",
+          width: 4,
+        },
+        { from: "Effect: Fortify Health", to: "Ingredient: Wheat", width: 4 },
+        {
+          from: "Effect: Ravage Health",
+          to: "Ingredient: Cyrodilic Spadetail",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Health",
+          to: "Ingredient: Eye of Sabre Cat",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Health",
+          to: "Ingredient: Giant Lichen",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Health",
+          to: "Ingredient: Jazbay Grapes",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Health",
+          to: "Ingredient: Silverside Perch",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Health",
+          to: "Ingredient: Skeever Tail",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Crimson Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Deathbell",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Ectoplasm",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Falmer Ear",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Human Flesh",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Human Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Imp Stool",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Nightshade",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Red Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: River Betty",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Skeever Tail",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Small Antlers",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Troll Fat",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Health",
+          to: "Ingredient: Void Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Sneak",
+          to: "Ingredient: Abecean Longfin",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Sneak",
+          to: "Ingredient: Beehive Husk",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Sneak",
+          to: "Ingredient: Frost Mirriam",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Sneak",
+          to: "Ingredient: Hawk Feathers",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Sneak",
+          to: "Ingredient: Human Flesh",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Sneak",
+          to: "Ingredient: Powdered Mammoth Tusk",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Sneak",
+          to: "Ingredient: Purple Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Health",
+          to: "Ingredient: Garlic",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Health",
+          to: "Ingredient: Juniper Berries",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Health",
+          to: "Ingredient: Luna Moth Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Health",
+          to: "Ingredient: Namira\u0027s Rot",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Health",
+          to: "Ingredient: Nordic Barnacle",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Health",
+          to: "Ingredient: Vampire Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Abecean Longfin",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Bleeding Crown",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Chaurus Eggs",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Deathbell",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Giant Lichen",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Pine Thrush Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Sabre Cat Tooth",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Poison",
+          to: "Ingredient: Small Antlers",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Fire",
+          to: "Ingredient: Bone Meal",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Fire",
+          to: "Ingredient: Dragon\u0027s Tongue",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Fire",
+          to: "Ingredient: Elves Ear",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Fire",
+          to: "Ingredient: Fire Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Fire",
+          to: "Ingredient: Fly Amanita",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Fire",
+          to: "Ingredient: Mudcrab Chitin",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Fire",
+          to: "Ingredient: Snowberries",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Chaurus Eggs",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Daedra Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Eye of Sabre Cat",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Glow Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Hagraven Feathers",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Hanging Moss",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Human Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Luna Moth Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Namira\u0027s Rot",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka",
+          to: "Ingredient: Nordic Barnacle",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Blisterwort",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Blue Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Bone Meal",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Canis Root",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Crimson Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Cyrodilic Spadetail",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Giant\u0027s Toe",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Rock Warbler Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Stamina",
+          to: "Ingredient: Spider Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Shock",
+          to: "Ingredient: Bee",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Shock",
+          to: "Ingredient: Giant Lichen",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Shock",
+          to: "Ingredient: Hagraven Feathers",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Shock",
+          to: "Ingredient: Void Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Stamina",
+          to: "Ingredient: Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Stamina",
+          to: "Ingredient: Chicken\u0027s Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Stamina",
+          to: "Ingredient: Nightshade",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Stamina",
+          to: "Ingredient: Small Antlers",
+          width: 4,
+        },
+        { from: "Effect: Frenzy", to: "Ingredient: Blisterwort", width: 4 },
+        { from: "Effect: Frenzy", to: "Ingredient: Falmer Ear", width: 4 },
+        { from: "Effect: Frenzy", to: "Ingredient: Fly Amanita", width: 4 },
+        {
+          from: "Effect: Frenzy",
+          to: "Ingredient: Hagraven Feathers",
+          width: 4,
+        },
+        { from: "Effect: Frenzy", to: "Ingredient: Human Heart", width: 4 },
+        { from: "Effect: Frenzy", to: "Ingredient: Troll Fat", width: 4 },
+        {
+          from: "Effect: Fortify Stamina",
+          to: "Ingredient: Chaurus Eggs",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Stamina",
+          to: "Ingredient: Garlic",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Stamina",
+          to: "Ingredient: Large Antlers",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Stamina",
+          to: "Ingredient: Lavender",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Stamina",
+          to: "Ingredient: Slaughterfish Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Stamina",
+          to: "Ingredient: Torchbug Thorax",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Light Armor",
+          to: "Ingredient: Beehive Husk",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Light Armor",
+          to: "Ingredient: Hawk Feathers",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Light Armor",
+          to: "Ingredient: Honeycomb",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Light Armor",
+          to: "Ingredient: Luna Moth Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Light Armor",
+          to: "Ingredient: Skeever Tail",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Carry Weight",
+          to: "Ingredient: Creep Cluster",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Carry Weight",
+          to: "Ingredient: Giant\u0027s Toe",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Carry Weight",
+          to: "Ingredient: Hawk Beak",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Carry Weight",
+          to: "Ingredient: River Betty",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Carry Weight",
+          to: "Ingredient: Scaly Pholiota",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Carry Weight",
+          to: "Ingredient: Wisp Wrappings",
+          width: 4,
+        },
+        { from: "Effect: Slow", to: "Ingredient: Deathbell", width: 4 },
+        { from: "Effect: Slow", to: "Ingredient: Large Antlers", width: 4 },
+        { from: "Effect: Slow", to: "Ingredient: River Betty", width: 4 },
+        { from: "Effect: Slow", to: "Ingredient: Salt Pile", width: 4 },
+        {
+          from: "Effect: Fortify Alteration",
+          to: "Ingredient: Grass Pod",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Alteration",
+          to: "Ingredient: River Betty",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Alteration",
+          to: "Ingredient: Spriggan Sap",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Health",
+          to: "Ingredient: Imp Stool",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Health",
+          to: "Ingredient: Mora Tapinella",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Health",
+          to: "Ingredient: Orange Dartwing",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Health",
+          to: "Ingredient: Slaughterfish Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Health",
+          to: "Ingredient: Slaughterfish Scales",
+          width: 4,
+        },
+        { from: "Effect: Fear", to: "Ingredient: Blue Dartwing", width: 4 },
+        {
+          from: "Effect: Fear",
+          to: "Ingredient: Cyrodilic Spadetail",
+          width: 4,
+        },
+        { from: "Effect: Fear", to: "Ingredient: Daedra Heart", width: 4 },
+        {
+          from: "Effect: Fear",
+          to: "Ingredient: Namira\u0027s Rot",
+          width: 4,
+        },
+        {
+          from: "Effect: Fear",
+          to: "Ingredient: Powdered Mammoth Tusk",
+          width: 4,
+        },
+        {
+          from: "Effect: Cure Disease",
+          to: "Ingredient: Charred Skeever Hide",
+          width: 4,
+        },
+        {
+          from: "Effect: Cure Disease",
+          to: "Ingredient: Hawk Feathers",
+          width: 4,
+        },
+        {
+          from: "Effect: Cure Disease",
+          to: "Ingredient: Mudcrab Chitin",
+          width: 4,
+        },
+        {
+          from: "Effect: Cure Disease",
+          to: "Ingredient: Vampire Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Bear Claws",
+          width: 4,
+        },
+        { from: "Effect: Restore Stamina", to: "Ingredient: Bee", width: 4 },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Charred Skeever Hide",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Eye of Sabre Cat",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Hawk Beak",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Histcarp",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Honeycomb",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Large Antlers",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Mudcrab Chitin",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Orange Dartwing",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Pearl",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Pine Thrush Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Powdered Mammoth Tusk",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Purple Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Sabre Cat Tooth",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Silverside Perch",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Small Pearl",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Torchbug Thorax",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Stamina",
+          to: "Ingredient: Wisp Wrappings",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Destruction",
+          to: "Ingredient: Beehive Husk",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Destruction",
+          to: "Ingredient: Ectoplasm",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Destruction",
+          to: "Ingredient: Glow Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Destruction",
+          to: "Ingredient: Glowing Mushroom",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Destruction",
+          to: "Ingredient: Nightshade",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Destruction",
+          to: "Ingredient: Wisp Wrappings",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Pickpocket",
+          to: "Ingredient: Blue Dartwing",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Pickpocket",
+          to: "Ingredient: Nordic Barnacle",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Pickpocket",
+          to: "Ingredient: Orange Dartwing",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Pickpocket",
+          to: "Ingredient: Slaughterfish Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Bleeding Crown",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Chicken\u0027s Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Crimson Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Hagraven Claw",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Lavender",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Tundra Cotton",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Void Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Magic",
+          to: "Ingredient: Wisp Wrappings",
+          width: 4,
+        },
+        {
+          from: "Effect: Waterbreathing",
+          to: "Ingredient: Chicken\u0027s Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Waterbreathing",
+          to: "Ingredient: Histcarp",
+          width: 4,
+        },
+        {
+          from: "Effect: Waterbreathing",
+          to: "Ingredient: Nordic Barnacle",
+          width: 4,
+        },
+        {
+          from: "Effect: Invisibility",
+          to: "Ingredient: Chaurus Eggs",
+          width: 4,
+        },
+        {
+          from: "Effect: Invisibility",
+          to: "Ingredient: Crimson Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Invisibility",
+          to: "Ingredient: Ice Wraith Teeth",
+          width: 4,
+        },
+        {
+          from: "Effect: Invisibility",
+          to: "Ingredient: Luna Moth Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Invisibility",
+          to: "Ingredient: Nirnroot",
+          width: 4,
+        },
+        {
+          from: "Effect: Invisibility",
+          to: "Ingredient: Vampire Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Illusion",
+          to: "Ingredient: Dragon\u0027s Tongue",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Illusion",
+          to: "Ingredient: Dwarven Oil",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Illusion",
+          to: "Ingredient: Mora Tapinella",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Illusion",
+          to: "Ingredient: Scaly Pholiota",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Illusion",
+          to: "Ingredient: Taproot",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Stamina",
+          to: "Ingredient: Bee",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Stamina",
+          to: "Ingredient: Fly Amanita",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Stamina",
+          to: "Ingredient: Mora Tapinella",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Stamina",
+          to: "Ingredient: Scaly Pholiota",
+          width: 4,
+        },
+        {
+          from: "Effect: Paralysis",
+          to: "Ingredient: Briar Heart",
+          width: 4,
+        },
+        { from: "Effect: Paralysis", to: "Ingredient: Canis Root", width: 4 },
+        {
+          from: "Effect: Paralysis",
+          to: "Ingredient: Human Flesh",
+          width: 4,
+        },
+        { from: "Effect: Paralysis", to: "Ingredient: Imp Stool", width: 4 },
+        {
+          from: "Effect: Paralysis",
+          to: "Ingredient: Swamp Fungal Pod",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Bear Claws",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Blue Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Blue Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Chicken\u0027s Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Glow Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Hanging Moss",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Human Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Nightshade",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Spider Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Damage Magicka Regen",
+          to: "Ingredient: Spriggan Sap",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Briar Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Creep Cluster",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Dwarven Oil",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Ectoplasm",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Elves Ear",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Fire Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Frost Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Giant Lichen",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Grass Pod",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Human Flesh",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Moon Sugar",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Mora Tapinella",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Pearl",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Red Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Taproot",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: Vampire Dust",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Magicka",
+          to: "Ingredient: White Cap",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Blisterwort",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Blue Dartwing",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Blue Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Charred Skeever Hide",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Daedra Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Eye of Sabre Cat",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Imp Stool",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Rock Warbler Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Restore Health",
+          to: "Ingredient: Swamp Fungal Pod",
+          width: 4,
+        },
+        { from: "Effect: Restore Health", to: "Ingredient: Wheat", width: 4 },
+        {
+          from: "Effect: Weakness to Frost",
+          to: "Ingredient: Abecean Longfin",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Frost",
+          to: "Ingredient: Elves Ear",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Frost",
+          to: "Ingredient: Fire Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Frost",
+          to: "Ingredient: Ice Wraith Teeth",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Frost",
+          to: "Ingredient: White Cap",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Magicka",
+          to: "Ingredient: Frost Mirriam",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Magicka",
+          to: "Ingredient: Grass Pod",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Magicka",
+          to: "Ingredient: Lavender",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Magicka",
+          to: "Ingredient: Orange Dartwing",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Magicka",
+          to: "Ingredient: Red Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Magicka",
+          to: "Ingredient: White Cap",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Fire",
+          to: "Ingredient: Bleeding Crown",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Fire",
+          to: "Ingredient: Frost Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Fire",
+          to: "Ingredient: Ice Wraith Teeth",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Fire",
+          to: "Ingredient: Juniper Berries",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Fire",
+          to: "Ingredient: Moon Sugar",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Fire",
+          to: "Ingredient: Powdered Mammoth Tusk",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Magicka",
+          to: "Ingredient: Hagraven Claw",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Magicka",
+          to: "Ingredient: Purple Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Magicka",
+          to: "Ingredient: Swamp Fungal Pod",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Magicka",
+          to: "Ingredient: Torchbug Thorax",
+          width: 4,
+        },
+        {
+          from: "Effect: Lingering Damage Magicka",
+          to: "Ingredient: Wheat",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Heavy Armor",
+          to: "Ingredient: Ice Wraith Teeth",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Heavy Armor",
+          to: "Ingredient: Sabre Cat Tooth",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Heavy Armor",
+          to: "Ingredient: Slaughterfish Scales",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Heavy Armor",
+          to: "Ingredient: Thistle Branch",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Heavy Armor",
+          to: "Ingredient: White Cap",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Two-handed",
+          to: "Ingredient: Dragon\u0027s Tongue",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Two-handed",
+          to: "Ingredient: Fly Amanita",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Two-handed",
+          to: "Ingredient: Troll Fat",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Magicka",
+          to: "Ingredient: Briar Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Magicka",
+          to: "Ingredient: Ectoplasm",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Magicka",
+          to: "Ingredient: Histcarp",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Magicka",
+          to: "Ingredient: Jazbay Grapes",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Magicka",
+          to: "Ingredient: Red Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Magicka",
+          to: "Ingredient: Tundra Cotton",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Magicka",
+          to: "Ingredient: Void Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Beehive Husk",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Charred Skeever Hide",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Falmer Ear",
+          width: 4,
+        },
+        { from: "Effect: Resist Poison", to: "Ingredient: Garlic", width: 4 },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Grass Pod",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Mudcrab Chitin",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Slaughterfish Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Thistle Branch",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Poison",
+          to: "Ingredient: Troll Fat",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Block",
+          to: "Ingredient: Bleeding Crown",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Block",
+          to: "Ingredient: Briar Heart",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Block",
+          to: "Ingredient: Honeycomb",
+          width: 4,
+        },
+        { from: "Effect: Fortify Block", to: "Ingredient: Pearl", width: 4 },
+        {
+          from: "Effect: Fortify Block",
+          to: "Ingredient: Slaughterfish Scales",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Block",
+          to: "Ingredient: Tundra Cotton",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Creep Cluster",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Dwarven Oil",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Jazbay Grapes",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Rock Warbler Egg",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Salt Pile",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Scaly Pholiota",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Taproot",
+          width: 4,
+        },
+        {
+          from: "Effect: Weakness to Magic",
+          to: "Ingredient: Torchbug Thorax",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Enchanting",
+          to: "Ingredient: Blue Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Enchanting",
+          to: "Ingredient: Hagraven Claw",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Enchanting",
+          to: "Ingredient: Snowberries",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Enchanting",
+          to: "Ingredient: Spriggan Sap",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Frost Mirriam",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Frost Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Hawk Beak",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Moon Sugar",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Purple Mountain Flower",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Silverside Perch",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Slaughterfish Scales",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Small Pearl",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Snowberries",
+          width: 4,
+        },
+        {
+          from: "Effect: Resist Frost",
+          to: "Ingredient: Thistle Branch",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Magicka",
+          to: "Ingredient: Dwarven Oil",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Magicka",
+          to: "Ingredient: Fire Salts",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Magicka",
+          to: "Ingredient: Garlic",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Magicka",
+          to: "Ingredient: Jazbay Grapes",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Magicka",
+          to: "Ingredient: Moon Sugar",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Magicka",
+          to: "Ingredient: Salt Pile",
+          width: 4,
+        },
+        {
+          from: "Effect: Regenerate Magicka",
+          to: "Ingredient: Taproot",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Restoration",
+          to: "Ingredient: Abecean Longfin",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Restoration",
+          to: "Ingredient: Cyrodilic Spadetail",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Restoration",
+          to: "Ingredient: Salt Pile",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Restoration",
+          to: "Ingredient: Small Antlers",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Restoration",
+          to: "Ingredient: Small Pearl",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Barter",
+          to: "Ingredient: Butterfly Wing",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Barter",
+          to: "Ingredient: Dragon\u0027s Tongue",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Barter",
+          to: "Ingredient: Hagraven Claw",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Barter",
+          to: "Ingredient: Tundra Cotton",
+          width: 4,
+        },
+        { from: "Effect: Ravage Stamina", to: "Ingredient: Bee", width: 4 },
+        {
+          from: "Effect: Ravage Stamina",
+          to: "Ingredient: Bone Meal",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Stamina",
+          to: "Ingredient: Deathbell",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Stamina",
+          to: "Ingredient: Honeycomb",
+          width: 4,
+        },
+        {
+          from: "Effect: Ravage Stamina",
+          to: "Ingredient: Thistle Branch",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Marksman",
+          to: "Ingredient: Canis Root",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Marksman",
+          to: "Ingredient: Elves Ear",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Marksman",
+          to: "Ingredient: Juniper Berries",
+          width: 4,
+        },
+        {
+          from: "Effect: Fortify Marksman",
+          to: "Ingredient: Spider Egg",
+          width: 4,
+        },
+      ];
+
+      new TomSelect("#select-node", {
+        create: false,
+        sortField: {
+          field: "text",
+          direction: "asc",
+        },
+      });
+
+      // This method is responsible for drawing the graph, returns the drawn network
+      function drawGraph() {
+        var container = document.getElementById("mynetwork");
+
+        // parsing and collecting nodes and edges from the python
+
+        initial_ingredient_nodes = node_list.filter(n => (n.basic == 1))
+        initial_ingredient_nodes_ids = initial_ingredient_nodes.map(n => n.id) 
+        initial_edges = edge_list.filter(e => initial_ingredient_nodes_ids.includes(e.to))
+        node_edge_count = initial_edges.map(e => e.from).reduce((acc, value) => {
+            acc[value] = (acc[value] || 0) + 1;
+            return acc;
+        }, {});
+
+        // Filter the array to keep only values that appear more than once
+        initial_effect_nodes_ids = initial_edges.map(e => e.from).filter(value => node_edge_count[value] > 1);
+        initial_nodes = initial_ingredient_nodes.concat(node_list.filter(n => initial_effect_nodes_ids.includes(n.id)))
+
+
+        nodes = new vis.DataSet(initial_nodes);
+        edges = new vis.DataSet(initial_edges);
+        nodeColors = {};
+        // allNodes = nodes.get({ returnType: "Object" });
+        // for (nodeId in allNodes) {
+        //   nodeColors[nodeId] = allNodes[nodeId].color;
+        // }
+        node_list.forEach(function (n) {
+          nodeColors[n.id] = n.color;
+        })
+        allEdges = edges.get({ returnType: "Object" });
+        // adding nodes and edges to the graph
+        data = { nodes: nodes, edges: edges };
+
+        var options = {
+          configure: {
+            enabled: true,
+            filter: ["physics"],
+          },
+          edges: {
+            color: {
+              inherit: true,
+            },
+            smooth: {
+              enabled: true,
+              type: "dynamic",
+            },
+          },
+          interaction: {
+            dragNodes: true,
+            hideEdgesOnDrag: false,
+            hideNodesOnDrag: false,
+          },
+          physics: {
+            enabled: true,
+            forceAtlas2Based: {
+              avoidOverlap: 0.9,
+              centralGravity: 0.01,
+              damping: 1,
+              gravitationalConstant: -300,
+              springConstant: 1,
+              springLength: 200,
+            },
+            // barnesHut: {
+            //   gravitationalConstant: -17000,
+            //   centralGravity: 0.05
+            // },
+            barnesHut: {
+              gravitationalConstant: -20000,
+              centralGravity: 0.15,
+              springLength: 140,
+              damping: 1,
+              avoidOverlap: 0.6
+            },
+
+            // solver: "forceAtlas2Based",
+            solver: "barnesHut",
+            stabilization: {
+              enabled: true,
+              fit: true,
+              iterations: 1000,
+              onlyDynamicEdges: false,
+              updateInterval: 50,
+            },
+          },
+        };
+
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+
+        network = new vis.Network(container, data, options);
+
+        network.on("click", function name(params) {
+          neighbourhoodHighlight(params, 2);
+        });
+
+        return network;
+      }
+      drawGraph();
+
+      // This section is for adapting the HTML
+      let div = document.getElementById("add_ingredients");
+      node_list
+        .filter((item) => item.category == "ingredient")
+        .forEach((ingredient) => {
+          // Create a container for each label-input pair
+          let container = document.createElement("div");
+          container.className = "ingredient-container";
+
+          // Create a label element
+          let label = document.createElement("label");
+          label.textContent = ingredient.label.trim() + ": ";
+          label.className = "ingredient-label";
+
+          // Create an input element
+          let input = document.createElement("input");
+
+          var input_original_val = ingredient.basic;
+          input.type = "number";
+          input.name = ingredient.id;
+          input.value = input_original_val;
+          input.min = 0;
+          input.className = "ingredient-input";
+          input.setAttribute("data-prev-value", input_original_val);
+          input.addEventListener("change", handleIngredientExistsChange);
+
+          // Append label and input to the container
+          container.appendChild(label);
+          container.appendChild(input);
+
+          // Append the container to the div
+          div.appendChild(container);
+        });
+
+      // This handler will only ever show one ingredient
+      // Eg: even if there's 7 wheats selected, only 1 wheat will be shown
+      function handleIngredientExistsChange(event) {
+        // Get the current and previous values
+        let currentValue = parseInt(event.target.value, 10);
+        let previousValue = parseInt(
+          event.target.getAttribute("data-prev-value"),
+          10
+        );
+        event.target.setAttribute("data-prev-value", currentValue);
+
+        // Value is zero
+        if (currentValue === 0) {
+          console.log("Decremented Input Name:", event.target.name);
+          deleteNodeByID(event.target.name);
+          deleteUnusableEffectNodes();
+        }
+
+        // Ingredient count went above 0
+        if (currentValue > 0) {
+          console.log("Incremented Input Name:", event.target.name);
+
+          if (previousValue == 0) {
+            addIngredientBack(event.target.name);
+          }
+          var ingredient_changed = node_list.filter(
+            (n) => n.id == event.target.name
+          )[0];
+          ingredient_changed.size = (currentValue * 10.0) + 15;
+          nodes.update(ingredient_changed);
+        }
+      }
+
+      function deleteNodeByID(node_id) {
+        // network.setSelection({ nodes: [node_id] });
+        // network.deleteSelected();
+        console.log("deleting node")
+        console.log(node_id)
+        network.body.data.nodes.remove(node_id);
+        var edges_to_delete = edges.get({ returnType: "object" }).filter(e => e.to == node_id || e.from == node_id);
+        console.log("deleting edges")
+        console.log(edges_to_delete)
+        network.body.data.edges.remove(edges_to_delete);
+      }
+
+      function deleteUnattachedNodes(curr_node_list, permissable_num_connects) {
+        console.log("deleting unusable effect nodes");
+        var curr_edges = edges.get({ returnType: "object" });
+        // Get ids for all unattached nodes in node list
+        var unattached_effect_nodes = curr_node_list
+          .filter(
+            enode =>
+              curr_edges.filter((cedge) => cedge.from == enode.id).length <
+              permissable_num_connects
+          )
+          .map((enode) => enode.id);
+        // and then delete them
+        console.log(unattached_effect_nodes);
+        unattached_effect_nodes.forEach((nid) =>
+          network.body.data.nodes.remove(nid)
+        );
+        // network.setSelection({ nodes: unattached_effect_nodes });
+        // console.log("selected above");
+        // network.deleteSelected();
+      }
+
+      function deleteAllUnattachedNodes() {
+        deleteUnattachedNodes(nodes.get({ returnType: "object" }), 1);
+      }
+      function deleteUnusableEffectNodes() {
+        deleteUnattachedNodes(
+          nodes
+            .get({ returnType: "object" })
+            .filter((item) => item.category == "effect"),
+          2
+        );
+      }
+
+      function addIngredientBack(selected_ingredient_id) {
+        // get the edges which are valid for this ingredient
+        var ingredient_to_add = node_list.filter(
+          (n) => n.id == selected_ingredient_id
+        )[0];
+        ingredient_to_add.size = 20.0;
+        var edges_to_add = edge_list.filter(
+          (e) => e.to == selected_ingredient_id
+        );
+        var curr_nodes = nodes.get({ returnType: "object" });
+        var linked_nodes = edges_to_add.map((e) => e.from);
+        var curr_effects_edges = edges.get({ returnType: "object" }).map(e => e.from);
+        var node_ids_to_add = linked_nodes.filter(
+          (e) => !curr_nodes.map((n) => n.id).includes(e)
+        ).filter(
+          (e) => curr_effects_edges.includes(e)
+        );
+        console.log("linked nodes");
+        console.log(linked_nodes);
+        console.log("node ids to add");
+        console.log(node_ids_to_add);
+        var nodes_to_add = node_list.filter((n) =>
+          node_ids_to_add.includes(n.id)
+        );
+
+        network.body.data.nodes.add(nodes_to_add.concat([ingredient_to_add]));
+        // add edges back in too
+        network.body.data.edges.add(edges_to_add);
+        if (highlightActive) {
+          // curr_highlighted_node = network.getSelection().nodes[0]
+          console.log("Highlight is active, redoing highlight for selected node")
+          console.log(network.getSelection().nodes)
+          neighbourhoodHighlight(network.getSelection())
+        }
+      }
+
+      // Reset all ingredients to zero, thus clearing the graph entirely
+      function clearAllIngredients() {
+        // For each ingredient, reset the input and delete the node
+        Array.from(document.querySelectorAll('input[type="number"]')).forEach(
+          function(ingredient_count_selector) {
+            ingredient_count_selector.value = 0; 
+            ingredient_count_selector.setAttribute("data-prev-value", 0);
+            deleteNodeByID(ingredient_count_selector.name);
+          } 
+        )
+        // Delete all the nodes
+        deleteAllUnattachedNodes();
+
+        // Remove highlight (or things will come back weird)
+        neighbourhoodHighlight({nodes: []});
+      }
+    </script>
+
+    <!-- <script>
+      var curr_edges = edges.get({ returnType: "object" });
+      selected_ingredient_id = "Ingredient: Salt Pile";
+      // selected_ingredient_id = 'Ingredient: Wheat'
+      // get the edges which are valid for this ingredient
+      var edges_to_add = edge_list.filter(
+        (e) => e.to == selected_ingredient_id
+      );
+      var curr_nodes = nodes.get({ returnType: "object" });
+      var node_ids_to_add = edges_to_add
+        .map((e) => e.from)
+        .filter((e) => curr_nodes[e]);
+      var nodes_to_add = node_list.filter((n) =>
+        node_ids_to_add.includes(n.id)
+      );
+
+      // get effect node list only (all, not just shown)
+      var effect_node_list = node_list.filter(
+        (item) => item.category == "effect"
+      );
+      // get current effect node list
+      var effect_node_list = nodes
+        .get({ returnType: "object" })
+        .filter((item) => item.category == "effect");
+
+      // deleteing nodes
+      // also delete edges (actually I don't think this does):
+      network.setSelection({
+        nodes: ["Ingredient: test", "Ingredient: example"],
+      });
+      network.deleteSelected();
+
+      // just delete node:
+      network.body.data.nodes.remove("Effect: example");
+
+      // get active effect nodes without any connections
+      var curr_edges = edges.get({ returnType: "object" });
+      var curr_effect_node_list = nodes
+        .get({ returnType: "object" })
+        .filter((item) => item.category == "effect");
+      var unattached_effect_nodes = curr_effect_node_list
+        .filter(
+          (enode) =>
+            curr_edges.filter((cedge) => cedge.from == enode.id).length == 0
+        )
+        .map((enode) => enode.id);
+      // and then delete them
+      network.setSelection({ nodes: unattached_effect_nodes });
+      network.deleteSelected();
+
+      // adding nodes
+      new_node = { id: "hello" };
+      network.body.data.nodes.add(new_node);
+      // add edges back in too
+      network.body.data.edges.add({
+        from: "Effect: Slow",
+        to: "Ingredient: Snowberries",
+        width: 4,
+      });
+    </script> -->
+  </body>
+</html>

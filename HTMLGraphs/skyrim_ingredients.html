@@ -678,6 +678,7 @@
         </div>
       </div>
       <div id="dropdown-container">
+        <label for="numdegrees">Number of degrees to highlight:</label><input type="number" id="numdegrees" value="5" name="numdegrees" min="0" max="6" onchange="changeHighlightDegrees(event)" />
         <button id="clear-all-toggle" onclick="clearAllIngredients()">Clear All.</button>
         <button id="add-all-toggle" onclick="addAllIngredients()">Add All Ingredients.</button>
         <button id="dropdown-toggle">Change ingredients inventory ></button>
@@ -701,6 +702,7 @@
 
     <script type="text/javascript">
       // initialize global variables.
+      var degrees = 5;
       var edges;
       var nodes;
       var allNodes;
@@ -4662,7 +4664,7 @@
         network = new vis.Network(container, data, options);
 
         network.on("click", function name(params) {
-          neighbourhoodHighlight(params, 5);
+          neighbourhoodHighlight(params, degrees);
         });
 
         return network;
@@ -4816,14 +4818,14 @@
           // curr_highlighted_node = network.getSelection().nodes[0]
           console.log("Highlight is active, redoing highlight for selected node")
           console.log(network.getSelection().nodes)
-          neighbourhoodHighlight(network.getSelection(), 5)
+          neighbourhoodHighlight(network.getSelection(), degrees)
         }
       }
 
       // Reset all ingredients to zero, thus clearing the graph entirely
       function clearAllIngredients() {
         // For each ingredient, reset the input and delete the node
-        Array.from(document.querySelectorAll('input[type="number"]')).forEach(
+        Array.from(document.querySelectorAll('.ingredient-input')).forEach(
           function(ingredient_count_selector) {
             ingredient_count_selector.value = 0; 
             ingredient_count_selector.setAttribute("data-prev-value", 0);
@@ -4839,7 +4841,7 @@
 
       function addAllIngredients() {
         // For each ingredient, reset the input and delete the node
-        Array.from(document.querySelectorAll('input[type="number"]')).forEach(
+        Array.from(document.querySelectorAll('.ingredient-input')).forEach(
           function(ingredient_count_selector) {
             ingredient_count_selector.value = 1; 
             // ingredient_count_selector.setAttribute("data-prev-value", 1);
@@ -4851,6 +4853,19 @@
         // // Remove highlight (or things will come back weird)
         // neighbourhoodHighlight({nodes: []});
         
+      }
+
+
+      function changeHighlightDegrees(event) {
+        console.log("changing the highlight degrees")
+        console.log(event.target.value)
+        degrees = parseInt(event.target.value, 10);
+        if (highlightActive) {
+          // curr_highlighted_node = network.getSelection().nodes[0]
+          console.log("Highlight is active, redoing highlight for selected node")
+          console.log(network.getSelection().nodes)
+          neighbourhoodHighlight(network.getSelection(), degrees)
+        }        
       }
     </script>
 
